@@ -36,23 +36,23 @@ export default class AuthService {
   static async register(
       // Required fields
       username,
-      password,
-      confirmation,
       email,
+      password,
       name,
+      nationality,
+      residenceCountry,
+      address,
+      postalCode,
       phone1,
       phone2,
+      confirmation,
       nic,
       nicIssueDate,
       nicIssuePlace,
       nicExpiryDate,
       financialId,
       employer,
-      address,
-      postalCode,
       birthDate,
-      nationality,
-      residenceCountry,
       role
   ) {
     const url = `${BASE_URL}/register`; // endpoint REST de registo
@@ -61,23 +61,23 @@ export default class AuthService {
     // Create the registration payload
     const payload = {
       username,
-      password,
-      confirmation,
       email,
+      password,
       name,
+      nationality,
+      residenceCountry,
+      address,
+      postalCode,
       phone1,
       phone2,
+      confirmation,
       nic,
       nicIssueDate,
       nicIssuePlace,
       nicExpiryDate,
       financialId,
       employer,
-      address,
-      postalCode,
       birthDate,
-      nationality,
-      residenceCountry,
       role
     };
 
