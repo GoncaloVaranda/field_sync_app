@@ -12,6 +12,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
 
+
     // Optional fields
     const [phone1, setPhone1] = useState("");
     const [phone2, setPhone2] = useState("");
