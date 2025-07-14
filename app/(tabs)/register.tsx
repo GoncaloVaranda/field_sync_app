@@ -58,6 +58,7 @@ const Register = () => {
                 console.log(err.message);
             } else {
                 console.log("Unexpected error:", err);
+
             }
         }
     };
