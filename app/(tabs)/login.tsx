@@ -1,10 +1,12 @@
+
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthService from "../../services/Integration";
 import BackButton from "../utils/back_button";
 
 const Login = () => {
-    
+    const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     
@@ -14,6 +16,7 @@ const Login = () => {
         // ex.: guarda token em AsyncStorage, contexto global, etc.
         console.log("Token recebido:");
         // navega para a próxima página
+        router.push("/dashboard");
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -37,7 +40,7 @@ const Login = () => {
 
             <TextInput
         style={styles.input}
-        placeholder="Nome do utilizador"
+        placeholder="Username"
         placeholderTextColor="#999"
         value={username}
         onChangeText={setUsername}
