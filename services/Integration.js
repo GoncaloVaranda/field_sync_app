@@ -30,4 +30,72 @@ export default class AuthService {
     // supõe que o backend devolve { token: "...", user: { ... } }
     return response.json();
   }
+
+
+
+  static async register(
+      // Required fields
+      username,
+      password,
+      confirmation,
+      email,
+      name,
+      phone1,
+      phone2,
+      nic,
+      nicIssueDate,
+      nicIssuePlace,
+      nicExpiryDate,
+      financialId,
+      employer,
+      address,
+      postalCode,
+      birthDate,
+      nationality,
+      residenceCountry,
+      role
+  ) {
+    const url = `${BASE_URL}/register`; // endpoint REST de registo
+
+    // Create the registration payload
+    const payload = {
+      username,
+      password,
+      confirmation,
+      email,
+      name,
+      phone1,
+      phone2,
+      nic,
+      nicIssueDate,
+      nicIssuePlace,
+      nicExpiryDate,
+      financialId,
+      employer,
+      address,
+      postalCode,
+      birthDate,
+      nationality,
+      residenceCountry,
+      role
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      // Read error payload from server if available
+      const errorBody = await response.text();
+      throw new Error(`Registration failed (${response.status}): ${errorBody}`);
+    }
+
+    // Assume the backend returns the registered user data
+    return response.json();
+  }
+
 }
