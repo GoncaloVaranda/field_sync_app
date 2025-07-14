@@ -5,6 +5,7 @@ import BackButton from "../utils/back_button";
 
 const Register = () => {
     // Required fields
+    const [role, setRole] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
@@ -25,30 +26,29 @@ const Register = () => {
     const [birthDate, setBirthDate] = useState("");
     const [nationality, setNationality] = useState("");
     const [residenceCountry, setResidenceCountry] = useState("");
-    const [role, setRole] = useState("");
 
     const handleRegister = async () => {
         try {
             const data = await AuthService.register(
                 username,
-                password,
-                confirmation,
                 email,
+                password,
                 name,
+                nationality,
+                residenceCountry,
+                address,
+                postalCode,
                 phone1,
                 phone2,
+                confirmation,
                 nic,
                 nicIssueDate,
                 nicIssuePlace,
                 nicExpiryDate,
                 financialId,
                 employer,
-                address,
-                postalCode,
                 birthDate,
-                nationality,
-                residenceCountry,
-                role
+                role,
             );
 
             console.log("Registado com sucesso:", data);
