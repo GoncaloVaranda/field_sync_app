@@ -18,10 +18,7 @@ export default class AuthService {
         // se precisares de token prévio, por exemplo:
         // "Authorization": `Bearer ${token}`
       },
-      body: {
-        username: username,
-        password: password,
-      },}
+      body: JSON.stringify({ username, password }),}
     );
 
     if (!response.ok) {

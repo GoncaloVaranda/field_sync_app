@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthService from "../../services/Integration";
 import BackButton from "../utils/back_button";
 
@@ -12,10 +12,14 @@ const Login = () => {
         try {   
         const data = await AuthService.login(username, password);
         // ex.: guarda token em AsyncStorage, contexto global, etc.
-        console.log("Token recebido:", data.token);
+        console.log("Token recebido:");
         // navega para a próxima página
-        } catch (err: any) {
-        Alert.alert("Erro no login", err.message);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                console.log(err.message);
+            } else {
+                console.log("Erro inesperado:", err);
+            }
     }
   };
 
@@ -33,7 +37,7 @@ const Login = () => {
 
             <TextInput
         style={styles.input}
-        placeholder="Nome de utilizador"
+        placeholder="Nome do utilizador"
         placeholderTextColor="#999"
         value={username}
         onChangeText={setUsername}
