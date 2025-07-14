@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import BackButton from "../utils/back_button";
 
 const Register = () => {
     return (
         <View>
-            <Text>Login</Text>
+            <BackButton/>
         </View>
     )
 }

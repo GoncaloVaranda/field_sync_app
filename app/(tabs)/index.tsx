@@ -3,9 +3,13 @@ import { Link } from "expo-router";
 import { Image, Text, View } from "react-native";
 
 export default function Index() {
+
   return (
     <View className ="flex-1 justify-start items-center pt-40">
       <Text className ="text-6xl text-green-500 font-bold">Field Sync</Text>
+
+
+      
 
       <Image
         source={require("../../assets/images/logo.png")}
@@ -13,7 +17,7 @@ export default function Index() {
         resizeMode="contain"
       />
 
-      <Link href="/login" className = "mt-0" push>
+      <Link href="/login" push asChild className = "mt-0"> 
         <Text className = "text-2xl text-black-500 font-semibold">
           Login
         </Text>

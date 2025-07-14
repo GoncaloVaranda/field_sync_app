@@ -1,12 +1,75 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import AuthService from "../../services/Integration";
+import BackButton from "../utils/back_button";
 
 const Login = () => {
+    
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    
+    const handleLogin = async ()=> {
+        try {   
+        const data = await AuthService.login(username, password);
+        // ex.: guarda token em AsyncStorage, contexto global, etc.
+        console.log("Token recebido:", data.token);
+        // navega para a próxima página
+        } catch (err: any) {
+        Alert.alert("Erro no login", err.message);
+    }
+  };
+
     return (
-        <View>
-            <Text></Text>
+        <View style={styles.container}>
+            <BackButton/>
+
+            <Text style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                marginBottom: 20,
+                justifyContent: "center",
+            }}>Login</Text>
+            
+
+            <TextInput
+        style={styles.input}
+        placeholder="Nome de utilizador"
+        placeholderTextColor="#999"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
+
+            <TextInput
+        style={styles.input}
+        placeholder="Palavra-passe"
+        placeholderTextColor="#999"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+       
+            <Button title="Iniciar sessão" onPress={handleLogin} />
+
         </View>
+        
     )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",        // centra verticalmente
+    paddingHorizontal: 30,
+  },
+  input: {
+    height: 50,                       // altura mínima para o placeholder aparecer
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 30,
+  },
+});
+
 export default Login;
-const styles = StyleSheet.create({});
