@@ -15,8 +15,6 @@ export default class AuthService {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // se precisares de token prévio, por exemplo:
-        // "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({ username, password }),}
     );

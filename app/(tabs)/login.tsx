@@ -15,8 +15,9 @@ const Login = () => {
         const data = await AuthService.login(username, password);
         // ex.: guarda token em AsyncStorage, contexto global, etc.
         console.log("Token recebido:");
+        console.log(data.token);
         // navega para a próxima página
-        router.push('/dashboard?userToken=${data.token}&username=${username}');
+        router.push(`/dashboard?token=${data.token}&username=${username}`);
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
