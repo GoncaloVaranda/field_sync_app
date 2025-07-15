@@ -65,8 +65,11 @@ const Register = () => {
 
         } catch (err: unknown) {
             if (err instanceof Error) {       
-
                 console.log(err.message);
+                Alert.alert('Error', err.message, [
+                { text: 'I understand' },
+                ]);
+
             } else {
  
                 console.log("Unexpected error:", err);
