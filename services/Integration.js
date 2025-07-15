@@ -56,7 +56,6 @@ export default class AuthService {
   ) {
     const url = `${BASE_URL}/register`; // endpoint REST de registo
 
-
     // Create the registration payload
     const payload = {
       username,
