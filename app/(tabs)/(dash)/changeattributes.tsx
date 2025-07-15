@@ -1,12 +1,13 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
 const Changeattributes = () => {
     const router = useRouter();
+    const { token, username } = useLocalSearchParams();
 
     const [password, setPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
@@ -30,6 +31,7 @@ const Changeattributes = () => {
 
         try {
             const data = await AuthService.changeAttributes(
+                token,
                 password,
                 confirmation,
                 nationality,

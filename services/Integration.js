@@ -105,6 +105,7 @@ export default class AuthService {
 
 
   static async changeAttributes(
+      token,
       password,
       confirmation,
       name,
@@ -123,7 +124,6 @@ export default class AuthService {
       residenceCountry
   ){
     const url = `${BASE_URL}/change-attributes`; // endpoint REST de registo
-    const token = localStorage.getItem('token');
 
     if (!token) {
       throw new Error('Autenticação necessária. Por favor, faça login novamente.');
@@ -174,6 +174,7 @@ export default class AuthService {
 
 
   static async changePassword(
+      token,
       currentPassword,
       confirmation,
       newPassword

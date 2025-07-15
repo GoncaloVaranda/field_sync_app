@@ -16,7 +16,7 @@ const Login = () => {
         // ex.: guarda token em AsyncStorage, contexto global, etc.
         console.log("Token recebido:");
         // navega para a próxima página
-        router.push("/dashboard");
+        router.push('/dashboard?userToken=${data.token}&username=${username}');
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
