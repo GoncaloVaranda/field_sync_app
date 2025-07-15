@@ -101,7 +101,7 @@ const Register = () => {
             >
                 <Picker.Item label="Selecione um tipo de conta" value="" enabled={false} />
                 <Picker.Item label="Registered User" value="Registered User" />
-                <Picker.Item label="Adherent Landowner" value="Adherent Landowner" />
+                <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
                 <Picker.Item label="Partner Operator" value="Partner Operator" />
             </Picker>
 
