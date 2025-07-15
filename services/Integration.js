@@ -103,4 +103,73 @@ export default class AuthService {
     }
   }
 
+
+  static async changeAttributes(
+      password,
+      confirmation,
+      name,
+      phone1,
+      phone2,
+      nic,
+      nicIssueDate,
+      nicIssuePlace,
+      nicExpiryDate,
+      financialId,
+      employer,
+      address,
+      postalCode,
+      birthDate,
+      nationality,
+      residenceCountry
+  ){
+    const url = `${BASE_URL}/change-attributes`; // endpoint REST de registo
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Autenticação necessária. Por favor, faça login novamente.');
+    }
+
+    const payload = {
+      token,
+      password,
+      confirmation,
+      name,
+      phone1,
+      phone2,
+      nic,
+      nicIssueDate,
+      nicIssuePlace,
+      nicExpiryDate,
+      financialId,
+      employer,
+      address,
+      postalCode,
+      birthDate,
+      nationality,
+      residenceCountry
+    };
+
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error('Falha na requisição:', err);
+      throw err;
+    }
+  };
+
 }
