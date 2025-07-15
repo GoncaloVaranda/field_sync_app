@@ -44,7 +44,7 @@ const changeAttributes = () => {
                 nicExpiryDate,
                 financialId,
                 employer,
-                birthDate,
+                birthDate
             );
 
             console.log("Atributos alterados com sucesso:", data);

@@ -172,4 +172,15 @@ export default class AuthService {
     }
   };
 
+
+  static async changePassword(
+      currentPassword,
+      confirmation,
+      newPassword
+  ) {
+
+
+
+  }
+
 }
