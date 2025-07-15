@@ -1,11 +1,11 @@
-import {useRouter} from "expo-router";
-import React, {useState} from "react";
-import AuthService from "@/services/Integration";
-import {Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import BackButton from "@/app/utils/back_button";
+import AuthService from "@/services/Integration";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const changeAttributes = () => {
+const Changeattributes = () => {
     const router = useRouter();
 
     const [password, setPassword] = useState("");
@@ -170,4 +170,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default changeAttributes();
+export default Changeattributes;

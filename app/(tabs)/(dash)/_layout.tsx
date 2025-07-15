@@ -1,12 +1,10 @@
 import { Slot } from "expo-router";
 import React from "react";
 
-const _Layout = () => {
+export default function DashLayout ()  {
     return (
-        <Slot  
-          
-        />
+        <Slot></Slot>
     );
 }
-export default _Layout;
+
 

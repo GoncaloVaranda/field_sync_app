@@ -1,11 +1,11 @@
-import {useRouter} from "expo-router";
-import React, {useState} from "react";
-import AuthService from "@/services/Integration";
-import {Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import BackButton from "@/app/utils/back_button";
+import AuthService from "@/services/Integration";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const changePassword = () => {
+const Changepassword = () => {
     const router = useRouter();
 
     const [currentPassword, setPassword] = useState("");
@@ -57,9 +57,9 @@ const changePassword = () => {
                     <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" value={currentPassword}
                                onChangeText={setPassword} secureTextEntry/>
                     <TextInput style={styles.input} placeholder="Confirmação de Password" placeholderTextColor="#999" value={confirmation}
-                               onChangeText={setPassword} secureTextEntry/>
+                               onChangeText={setConfirmation} secureTextEntry/>
                     <TextInput style={styles.input} placeholder="Password Nova" placeholderTextColor="#999" value={newPassword}
-                               onChangeText={setPassword} secureTextEntry/>
+                               onChangeText={setNewPassword} secureTextEntry/>
 
                     <Text style={styles.smallerText}></Text>
 
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default changePassword();
+export default Changepassword;
