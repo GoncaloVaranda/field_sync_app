@@ -1,3 +1,4 @@
+import { Picker } from '@react-native-picker/picker';
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -92,7 +93,18 @@ const Register = () => {
 
             <View style={styles.formContainer}>
             {/* Required Fields */}
-            <TextInput style={styles.input} placeholder="Tipo de Conta" placeholderTextColor="#999" value={role} onChangeText={setRole}/>
+            
+            <Picker
+                selectedValue={role}
+                onValueChange={(itemValue) => setRole(itemValue)}
+                style={styles.input}
+            >
+                <Picker.Item label="Selecione um tipo de conta" value="" enabled={false} />
+                <Picker.Item label="Registered User" value="Registered User" />
+                <Picker.Item label="Adherent Landowner" value="Adherent Landowner" />
+                <Picker.Item label="Partner Operator" value="Partner Operator" />
+            </Picker>
+
             <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={username} onChangeText={setUsername} autoCapitalize="none"/>
             <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address"/>
             <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" value={password} onChangeText={setPassword} secureTextEntry/>
