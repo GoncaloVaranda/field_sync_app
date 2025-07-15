@@ -29,7 +29,6 @@ const Register = () => {
     const [residenceCountry, setResidenceCountry] = useState("");
 
     const handleRegister = async () => {
-        console.log("Chegou aqui1")
         try {
             const data = await AuthService.register(
                 username,
@@ -52,7 +51,6 @@ const Register = () => {
                 birthDate,
                 role,
             );
-            console.log("Chegou aqui2")
 
 
             console.log("Registado com sucesso:", data);
@@ -97,9 +95,9 @@ const Register = () => {
             <TextInput style={styles.input} placeholder="Telefone 1" placeholderTextColor="#999" value={phone1} onChangeText={setPhone1} keyboardType="phone-pad"/>
             <TextInput style={styles.input} placeholder="Telefone 2" placeholderTextColor="#999" value={phone2} onChangeText={setPhone2} keyboardType="phone-pad"/>
             <TextInput style={styles.input} placeholder="NIC" placeholderTextColor="#999" value={nic} onChangeText={setNic}/>
-            <TextInput style={styles.input} placeholder="Data emissão NIC (YYYY-MM-DD)" placeholderTextColor="#999" value={nicIssueDate} onChangeText={setNicIssueDate}/>
+            <TextInput style={styles.input} placeholder="Data emissão NIC (DD/MM/YYYY)" placeholderTextColor="#999" value={nicIssueDate} onChangeText={setNicIssueDate}/>
             <TextInput style={styles.input} placeholder="Local emissão NIC" placeholderTextColor="#999" value={nicIssuePlace} onChangeText={setNicIssuePlace}/>
-            <TextInput style={styles.input} placeholder="Data expiração NIC (YYYY-MM-DD)" placeholderTextColor="#999" value={nicExpiryDate} onChangeText={setNicExpiryDate}/>
+            <TextInput style={styles.input} placeholder="Data expiração NIC (DD/MM/YYYY)" placeholderTextColor="#999" value={nicExpiryDate} onChangeText={setNicExpiryDate}/>
             <TextInput style={styles.input} placeholder="ID Financeiro" placeholderTextColor="#999" value={financialId} onChangeText={setFinancialId}/>
             <TextInput style={styles.input} placeholder="Employer" placeholderTextColor="#999" value={employer} onChangeText={setEmployer}/>
             <TextInput style={styles.input} placeholder="Endereço" placeholderTextColor="#999" value={address} onChangeText={setAddress}/>
