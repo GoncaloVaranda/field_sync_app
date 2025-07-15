@@ -92,6 +92,7 @@ const Register = () => {
             <TextInput style={styles.input} placeholder="Confirmar Password" placeholderTextColor="#999" value={confirmation} onChangeText={setConfirmation} secureTextEntry/>
             <TextInput style={styles.input} placeholder="Nome" placeholderTextColor="#999" value={name} onChangeText={setName} autoCapitalize="none" autoComplete="off" autoCorrect={false} />
 
+
             {/* Optional Fields */}
             <Text style={styles.sectionLabelText}>Campos Opcionais</Text>
             <TextInput style={styles.input} placeholder="Telefone 1" placeholderTextColor="#999" value={phone1} onChangeText={setPhone1} keyboardType="phone-pad"/>
