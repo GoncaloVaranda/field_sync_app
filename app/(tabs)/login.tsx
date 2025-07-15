@@ -1,7 +1,7 @@
 
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthService from "../../services/Integration";
 import BackButton from "../utils/back_button";
 
@@ -20,6 +20,9 @@ const Login = () => {
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
+                Alert.alert('Error', err.message, [
+                            { text: 'I understand' },
+                            ]);
             } else {
                 console.log("Erro inesperado:", err);
             }

@@ -92,14 +92,12 @@ export default class AuthService {
 
 
       if (!response.ok) {
-        console.log(response)
         const errorText = await response.text();
         throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
       }
 
       return await response.json();
     } catch (err) {
-      console.log(payload)
       console.error('Falha na requisição:', err);
       throw err;
     }

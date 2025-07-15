@@ -1,9 +1,11 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View, ScrollView, SafeAreaView  } from "react-native";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthService from "../../services/Integration";
 import BackButton from "../utils/back_button";
 
 const Register = () => {
+    const router = useRouter();
     // Required fields
     const [role, setRole] = useState("");
     const [username, setUsername] = useState("");
@@ -29,6 +31,7 @@ const Register = () => {
     const [residenceCountry, setResidenceCountry] = useState("");
 
     const handleRegister = async () => {
+        
         try {
             const data = await AuthService.register(
                 username,
@@ -55,14 +58,20 @@ const Register = () => {
 
             console.log("Registado com sucesso:", data);
             // Handle successful registration (navigation, etc.)
+            Alert.alert('Success', 'User successfully created!', [
+            { text: 'OK' },
+            ]);
+            router.back();
+
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                console.log("Chegou aqui3")
-
+            if (err instanceof Error) {       
                 console.log(err.message);
-            } else {
-                console.log("Chegou aqui4")
+                Alert.alert('Error', err.message, [
+                { text: 'I understand' },
+                ]);
 
+            } else {
+ 
                 console.log("Unexpected error:", err);
 
             }
@@ -102,7 +111,7 @@ const Register = () => {
             <TextInput style={styles.input} placeholder="Employer" placeholderTextColor="#999" value={employer} onChangeText={setEmployer}/>
             <TextInput style={styles.input} placeholder="Endereço" placeholderTextColor="#999" value={address} onChangeText={setAddress}/>
             <TextInput style={styles.input} placeholder="Código Postal" placeholderTextColor="#999" value={postalCode} onChangeText={setPostalCode}/>
-            <TextInput style={styles.input} placeholder="Data de nascimento (YYYY-MM-DD)" placeholderTextColor="#999" value={birthDate} onChangeText={setBirthDate}/>
+            <TextInput style={styles.input} placeholder="Data de nascimento (DD/MM/YYYY)" placeholderTextColor="#999" value={birthDate} onChangeText={setBirthDate}/>
             <TextInput style={styles.input} placeholder="Nacionalidade" placeholderTextColor="#999" value={nationality} onChangeText={setNationality}/>
             <TextInput style={styles.input} placeholder="País de residência" placeholderTextColor="#999" value={residenceCountry} onChangeText={setResidenceCountry}/>
 
