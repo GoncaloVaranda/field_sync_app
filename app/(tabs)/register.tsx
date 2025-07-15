@@ -29,6 +29,7 @@ const Register = () => {
     const [residenceCountry, setResidenceCountry] = useState("");
 
     const handleRegister = async () => {
+        console.log("Chegou aqui1")
         try {
             const data = await AuthService.register(
                 username,
@@ -51,13 +52,19 @@ const Register = () => {
                 birthDate,
                 role,
             );
+            console.log("Chegou aqui2")
+
 
             console.log("Registado com sucesso:", data);
             // Handle successful registration (navigation, etc.)
         } catch (err: unknown) {
             if (err instanceof Error) {
+                console.log("Chegou aqui3")
+
                 console.log(err.message);
             } else {
+                console.log("Chegou aqui4")
+
                 console.log("Unexpected error:", err);
 
             }

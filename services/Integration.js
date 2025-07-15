@@ -34,7 +34,6 @@ export default class AuthService {
 
 
   static async register(
-      // Required fields
       username,
       email,
       password,
@@ -53,7 +52,7 @@ export default class AuthService {
       financialId,
       employer,
       birthDate,
-      role
+      role,
   ) {
     const url = `${BASE_URL}/register`; // endpoint REST de registo
 
@@ -64,40 +63,46 @@ export default class AuthService {
       email,
       password,
       name,
-      nationality,
-      residenceCountry,
-      address,
-      postalCode,
-      phone1,
-      phone2,
+      nationality: nationality || "",
+      residenceCountry: residenceCountry || "",
+      address: address || "",
+      postalCode: postalCode || "",
+      phone1: phone1 || "",
+      phone2: phone2 || "",
       confirmation,
-      nic,
-      nicIssueDate,
-      nicIssuePlace,
-      nicExpiryDate,
-      financialId,
-      employer,
-      birthDate,
+      nic: nic || "",
+      nicIssueDate: nicIssueDate || "",
+      nicIssuePlace: nicIssuePlace || "",
+      nicExpiryDate: nicExpiryDate || "",
+      financialId: financialId || "",
+      employer: employer || "",
+      birthDate: birthDate || "",
       role
     };
 
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
 
-    if (!response.ok) {
-      // Read error payload from server if available
-      const errorBody = await response.text();
-      throw new Error(`Registration failed (${response.status}): ${errorBody}`);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+
+      if (!response.ok) {
+        console.log(response)
+        const errorText = await response.text();
+        throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.log(payload)
+      console.error('Falha na requisição:', err);
+      throw err;
     }
-
-    // Assume the backend returns the registered user data
-    return response.json();
   }
-
 }
