@@ -15,7 +15,7 @@ const CheckAccountState = () => {
 
     const handleCheckAccountState = async () => {
         try {
-            const data = await AuthService.changeState(
+            const data = await AuthService.checkAccountState(
                 token,
                 targetUsername,
             );
