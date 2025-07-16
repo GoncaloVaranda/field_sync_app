@@ -1,53 +1,19 @@
 
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Button, Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import LogoutModal from "../../utils/LogoutModal";
 
 
 export default function Dashboard() {
   const router = useRouter();
   const { token, username } = useLocalSearchParams();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   
-  const handleLogout = () => {
-    // Clear user session, token, etc. (you can add your logout logic here)
-    console.log("Logged out");
-    setIsModalVisible(false); // Hide the modal
-  };
-
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-      <View style={styles.usernameButton}>
-
-        settings-outline
-        
-        <Pressable onPress={() => setIsModalVisible(true)} style={{ flexDirection: 'row', alignItems: 'center' }}> 
-          <Text>{username}  </Text>
-          <Ionicons name ="settings-outline" size={18}></Ionicons>
-        </Pressable>
-
-        {/* Modal for logout */}
-        <Modal
-          transparent={true}
-          visible={isModalVisible}
-          animationType="slide"
-          onRequestClose={() => setIsModalVisible(false)} // Handle modal close on hardware back press (Android)
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>{username}</Text>
-              <Button title="Logout" onPress={handleLogout} />
-              <Button
-                title="Cancel"
-                onPress={() => setIsModalVisible(false)} // Close the modal without logging out
-              />
-            </View>
-          </View>
-        </Modal>
-      </View>
+      <LogoutModal username={username.toString()} token={token.toString()} router={router} />
 
 
       <View style={styles.logoContainer}>
