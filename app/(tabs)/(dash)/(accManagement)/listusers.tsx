@@ -5,23 +5,21 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const CheckAccountState = () => {
-
+const ListUsers = () => {
     const router = useRouter();
-    const { token, username } = useLocalSearchParams();
-    const [targetUsername, setTargetUsername] = useState("");
-    const [accountData, setAccountData] = useState<any>(null);
+    const {token, username} = useLocalSearchParams();
+    const [accountData, setAccountData] = useState<any[]>([]);
 
-    const HandleCheckAccountState = async () => {
+    const HandleListUsers = async () => {
         try {
-            const data = await AuthService.checkAccountState(
+            const data = await AuthService.listUsers(
                 token,
-                targetUsername,
             );
 
-            console.log("Estado da conta apresentado com sucesso.", data);
-            Alert.alert('Success', 'Account state successfully showed!', [
-                { text: 'OK' },
+            console.log("Utilizadores listados com sucesso.", data);
+            setAccountData(data);
+            Alert.alert('Success', 'Users listed successfully!', [
+                {text: 'OK'},
             ]);
             router.back();
         } catch (err: unknown) {
@@ -41,27 +39,35 @@ const CheckAccountState = () => {
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <BackButton/>
                 <View style={styles.mainContent}>
-                    <Text style={styles.title}>Visualizar estado de conta</Text>
+                    <Text style={styles.title}>Listar contas com pedido de remoção</Text>
                 </View>
-                <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername} secureTextEntry/>
 
-                <Button title="Pesquisar" onPress={HandleCheckAccountState}/>
+                <View style={styles.buttonContainer}>
+                    <Button title="Pesquisar" onPress={HandleListUsers}/>
+                </View>
 
-                {accountData && (
+                {accountData.length > 0 ? (
                     <View style={styles.resultContainer}>
-
-                        <Text style={styles.resultTitle}>Dados da Conta:</Text>
-                        {Object.entries(accountData).map(([key, value]) => (
-                            <Text key={key} style={styles.resultText}>
-                                {key}: {String(value)}
-                            </Text>
+                        <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>
+                        {accountData.map((account, index) => (
+                            <View key={index} style={{marginBottom: 16}}>
+                                {Object.entries(account).map(([key, value]) => (
+                                    <Text key={key} style={styles.resultText}>
+                                        {key}: {String(value)}
+                                    </Text>
+                                ))}
+                                <View style={{height: 1, backgroundColor: '#eee', marginVertical: 8}} />
+                            </View>
                         ))}
                     </View>
+                ) : (
+                    <Text style={styles.smallerText}>Nenhum resultado encontrado</Text>
                 )}
             </ScrollView>
         </SafeAreaView>
+
     );
-}
+};
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -142,4 +148,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CheckAccountState;
+export default ListUsers;

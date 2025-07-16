@@ -5,14 +5,14 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import {Picker} from "@react-native-picker/picker";
 
-const changeState = () => {
+const ChangeState = () => {
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
     const [state, setState] = useState("");
 
-    const handleChangeState = async () => {
+    const HandleChangeState = async () => {
         try {
             const data = await AuthService.changeState(
                 token,
@@ -63,7 +63,7 @@ const changeState = () => {
                     <View style={styles.buttonContainer}>
                         <Button
                             title="Confirmar alteração"
-                            onPress={handleChangeState}
+                            onPress={HandleChangeState}
                             disabled={!targetUsername || !state}
                         />
                     </View>
@@ -137,4 +137,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default changeState;
+export default ChangeState;
