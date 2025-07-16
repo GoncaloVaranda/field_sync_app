@@ -45,10 +45,6 @@ const Changepassword = () => {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
 
-                <View style={styles.backButtonWrapper}>
-                    <BackButton/>
-                </View>
-
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar Password</Text>
                 </View>
@@ -74,6 +70,9 @@ const Changepassword = () => {
                         />
                     </View>
                 </View>
+
+                <BackButton/>
+                
             </ScrollView>
         </SafeAreaView>
     );
@@ -87,12 +86,6 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         paddingHorizontal: 25,
-    },
-    backButtonWrapper: {
-        position: 'absolute',
-        top: 40,
-        left: 15,
-        zIndex: 10,
     },
     mainContent: {
         marginTop: 80,

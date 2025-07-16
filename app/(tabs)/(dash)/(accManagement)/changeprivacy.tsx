@@ -1,13 +1,13 @@
-import {useLocalSearchParams, useRouter} from "expo-router";
-import AuthService from "@/services/Integration";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import BackButton from "@/app/utils/back_button";
-import React, {useState} from "react";
+import AuthService from "@/services/Integration";
 import { Picker } from '@react-native-picker/picker';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Changeprivacy = () => {
     const router = useRouter();
-    const { username, token } = useLocalSearchParams();
+    const { token, username } = useLocalSearchParams();
     const [privacy, setPrivacy] = useState("");
 
     const handleChangePrivacy = async () => {

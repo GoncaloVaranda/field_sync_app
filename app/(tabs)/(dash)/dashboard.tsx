@@ -28,13 +28,13 @@ export default function Dashboard() {
                 <Text style={styles.pageTitle}>Dashboard</Text>
 
                 <View style={styles.container}>
-                        <Pressable style={styles.mainCard} onPress={() => router.push(`/changeattributes?token=${token}&username=${username}`)}>
+                        <Pressable style={styles.mainCard} onPress={() => router.push(`/accmanagement?token=${token}&username=${username}`)}>
                             <Text style={styles.mainIcon}>👤</Text>
                             <Text style={styles.mainTitle}>Gestão de Contas</Text>
                             <Text style={styles.mainDesc}>Aqui pode gerir todas as operações relacionadas com contas de utilizador.</Text>
                         </Pressable>
 
-                        <Pressable style={styles.mainCard} onPress={() => router.push(`/changepassword?token=${token}&username=${username}`)}>
+                        <Pressable style={styles.mainCard} onPress={() => router.push(`/wsmanagement?token=${token}&username=${username}`)}>
                             <Text style={styles.mainIcon}>📝</Text>
                             <Text style={styles.mainTitle}>Gestão de Worksheets</Text>
                             <Text style={styles.mainDesc}>Aqui pode importar, ver e gerir folhas de obra</Text>
