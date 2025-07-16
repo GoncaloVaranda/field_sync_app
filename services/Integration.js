@@ -330,5 +330,35 @@ export default class AuthService {
   };
 
 
+  static async checkAccountState(token, targetUsername) {
+    const url = `${BASE_URL}/check-account-state`;
+
+    const payload = {
+      token,
+      targetUsername,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+      }
+
+      return await response.json();
+
+    } catch (err) {
+      console.error('Falha na requisição:', err);
+      throw err;
+    }
+  };
 
 }

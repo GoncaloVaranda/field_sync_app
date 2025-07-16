@@ -5,23 +5,23 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import {Picker} from "@react-native-picker/picker";
 
-const changeState = () => {
+
+const CheckAccountState = () => {
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
-    const [state, setState] = useState("");
+    const [accountData, setAccountData] = useState<any>(null);
 
-    const handleChangeState = async () => {
+    const handleCheckAccountState = async () => {
         try {
             const data = await AuthService.changeState(
                 token,
                 targetUsername,
-                state
             );
 
-            console.log("Estado da conta alterado com sucesso:", data);
-            Alert.alert('Success', 'Account state successfully changed!', [
+            console.log("Estado da conta apresentado com sucesso.", data);
+            Alert.alert('Success', 'Account state successfully showed!', [
                 { text: 'OK' },
             ]);
             router.back();
@@ -37,41 +37,32 @@ const changeState = () => {
         }
     };
 
-    return (
+    return(
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <BackButton/>
                 <View style={styles.mainContent}>
-                    <Text style={styles.title}>Alterar estado de conta</Text>
+                    <Text style={styles.title}>Visualizar estado de conta</Text>
                 </View>
+                <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername} secureTextEntry/>
 
-                <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Escreva o Username da conta alvo à alteração, e selecione o novo estado da conta. </Text>
+                <Button title="Pesquisar" onPress={handleCheckAccountState}/>
 
-                    <TextInput style={styles.input} placeholder="Nome de utilizador alvo" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername} autoCapitalize="none"/>
-
-                    <View style={styles.stateOption}>
-                        <Text style={styles.stateText}>Definir privacidade:</Text>
-                        <Picker selectedValue={state} onValueChange={(value) => setState(value)}>
-                            <Picker.Item label="Pedido de remoção" value="removal request" />
-                            <Picker.Item label="Activa" value="active" />
-                            <Picker.Item label="Suspensa" value="suspended" />
-                            <Picker.Item label="Desactiva" value="disabled" />
-                        </Picker>
+                {accountData && (
+                    <View style={styles.resultContainer}>
+                        <Text style={styles.resultTitle}>Dados da Conta:</Text>
+                        {Object.entries(accountData).map(([key, value]) => (
+                            <Text key={key} style={styles.resultText}>
+                                {key}: {String(value)}
+                            </Text>
+                        ))}
                     </View>
+                )}
 
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title="Confirmar alteração"
-                            onPress={handleChangeState}
-                            disabled={!targetUsername || !state}
-                        />
-                    </View>
-                </View>
             </ScrollView>
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -134,7 +125,22 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
+    resultContainer: {
+        marginTop: 24,
+        padding: 16,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#eee',
+    },
+    resultTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 12,
+    },
+    resultText: {
+        marginBottom: 8,
+    }
 });
 
-
-export default changeState;
+export default CheckAccountState;
