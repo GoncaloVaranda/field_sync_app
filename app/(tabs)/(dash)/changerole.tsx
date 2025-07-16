@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 const changeRole = () => {
+
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
