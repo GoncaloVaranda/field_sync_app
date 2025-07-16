@@ -46,6 +46,7 @@ const ListUsers = () => {
                     <Button title="Pesquisar" onPress={HandleListUsers}/>
                 </View>
 
+
                 {accountData.length > 0 ? (
                     <View style={styles.resultContainer}>
                         <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>

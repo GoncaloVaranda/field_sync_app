@@ -424,7 +424,6 @@ export default class AuthService {
 
   static async listRemoveRequests(token) {
     const url = `${BASE_URL}/list-users/removal-requests`;
-
     const payload = {
       token,
     };

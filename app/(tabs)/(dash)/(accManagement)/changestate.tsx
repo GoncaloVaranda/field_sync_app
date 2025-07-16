@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginBottom: 40,
     },
+
     formContainer: {
         width: '100%',
         marginTop: 10,

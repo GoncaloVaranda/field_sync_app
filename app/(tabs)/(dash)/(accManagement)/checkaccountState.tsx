@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
+
     stateText: {
         fontSize: 16,
         color: '#333',

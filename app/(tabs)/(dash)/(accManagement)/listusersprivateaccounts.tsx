@@ -42,6 +42,7 @@ const ListUsersPrivateAccount = () => {
                     <Text style={styles.title}>Listar contas com pedido de remoção</Text>
                 </View>
 
+
                 <View style={styles.buttonContainer}>
                     <Button title="Pesquisar" onPress={HandleListUsersPrivateAccounts}/>
                 </View>
