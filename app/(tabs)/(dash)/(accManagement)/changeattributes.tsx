@@ -69,10 +69,9 @@ const Changeattributes = () => {
 
     return(
         <SafeAreaView style={styles.safeArea}>
-            
-
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
 
+                <BackButton/>
                 
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar Atributos</Text>
