@@ -7,7 +7,7 @@ import LogoutModal from "../../../utils/LogoutModal";
 
 export default function Accmanagement() {
     const router = useRouter();
-    const { token, username } = useLocalSearchParams();
+    const { token, username , role } = useLocalSearchParams();
 
     return(
     <View style={styles.container}>
@@ -16,6 +16,7 @@ export default function Accmanagement() {
       <LogoutModal
           username={username.toString()}
           token={token.toString()}
+          role = {role.toString()}
           router={router}
         />
       

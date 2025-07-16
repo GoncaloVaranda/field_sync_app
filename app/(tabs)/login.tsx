@@ -1,7 +1,7 @@
 
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import AuthService from "../../services/Integration";
 import BackButton from "../utils/back_button";
 
@@ -9,15 +9,17 @@ const Login = () => {
     const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     
     const handleLogin = async ()=> {
+        setIsLoading(true);
         try {   
         const data = await AuthService.login(username, password);
         // ex.: guarda token em AsyncStorage, contexto global, etc.
         console.log("Token recebido:");
         
         // navega para a próxima página
-        router.push(`/dashboard?token=${data.token}&username=${username}`);
+        router.push(`/dashboard?token=${data.token}&username=${username}&role=${data.role}`);
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -27,7 +29,9 @@ const Login = () => {
             } else {
                 console.log("Erro inesperado:", err);
             }
-    }
+          } finally {
+              setIsLoading(false);
+          }
   };
 
     return (
@@ -60,9 +64,16 @@ const Login = () => {
         secureTextEntry
       />
        
-            <Button title="Iniciar sessão" onPress={handleLogin} />
+          
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+          <Button title="Iniciar sessão" onPress={handleLogin} />
+        )}
+            
 
         </View>
+        
         
     )
 }
