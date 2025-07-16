@@ -35,7 +35,7 @@ export default function Accmanagement() {
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changePassword?token=${token}&username=${username}`)}
+            onPress={() => router.push(`/changepassword?token=${token}&username=${username}`)}
             >
             <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
             </Pressable>
