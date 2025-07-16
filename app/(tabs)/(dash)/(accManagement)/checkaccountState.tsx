@@ -59,7 +59,6 @@ const CheckAccountState = () => {
                         ))}
                     </View>
                 )}
-
             </ScrollView>
         </SafeAreaView>
     );
