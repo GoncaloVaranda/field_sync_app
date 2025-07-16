@@ -1,6 +1,6 @@
 import {useLocalSearchParams, useRouter} from "expo-router";
 import AuthService from "@/services/Integration";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import BackButton from "@/app/utils/back_button";
 import React, {useState} from "react";
 import { Picker } from '@react-native-picker/picker';
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
+
 });
 
 export default Changeprivacy;

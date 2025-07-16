@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: "#555",
     },
+
 });
 
 export default Register;
