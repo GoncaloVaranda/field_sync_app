@@ -7,13 +7,13 @@ import LogoutModal from "../../utils/LogoutModal";
 
 export default function Dashboard() {
   const router = useRouter();
-  const { token, username } = useLocalSearchParams();
+  const { token, username , role} = useLocalSearchParams();
   
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-      <LogoutModal username={username.toString()} token={token.toString()} router={router} />
+      <LogoutModal username={username.toString()} token={token.toString()} role={role.toString()} router={router} />
 
 
       <View style={styles.logoContainer}>
@@ -28,13 +28,13 @@ export default function Dashboard() {
                 <Text style={styles.pageTitle}>Dashboard</Text>
 
                 <View style={styles.container}>
-                        <Pressable style={styles.mainCard} onPress={() => router.push(`/accmanagement?token=${token}&username=${username}`)}>
+                        <Pressable style={styles.mainCard} onPress={() => router.push(`/accmanagement?token=${token}&username=${username}&role=${role}`)}>
                             <Text style={styles.mainIcon}>👤</Text>
                             <Text style={styles.mainTitle}>Gestão de Contas</Text>
                             <Text style={styles.mainDesc}>Aqui pode gerir todas as operações relacionadas com contas de utilizador.</Text>
                         </Pressable>
 
-                        <Pressable style={styles.mainCard} onPress={() => router.push(`/wsmanagement?token=${token}&username=${username}`)}>
+                        <Pressable style={styles.mainCard} onPress={() => router.push(`/wsmanagement?token=${token}&username=${username}&role=${role}`)}>
                             <Text style={styles.mainIcon}>📝</Text>
                             <Text style={styles.mainTitle}>Gestão de Worksheets</Text>
                             <Text style={styles.mainDesc}>Aqui pode importar, ver e gerir folhas de obra</Text>
