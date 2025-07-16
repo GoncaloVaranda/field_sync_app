@@ -66,7 +66,7 @@ const Login = () => {
        
           
         {isLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#51ff009f" />
           ) : (
           <Button title="Iniciar sessão" onPress={handleLogin} />
         )}

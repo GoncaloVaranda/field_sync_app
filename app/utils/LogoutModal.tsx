@@ -66,7 +66,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router
             <Text style={styles.modalUsername}>{username}</Text>
             <Text style={styles.modalRole}>{role}</Text>
             {isLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#51ff009f" />
                  ) : (
                 <Button title="Logout" onPress={handleLogout} />
               )}

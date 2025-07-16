@@ -1,9 +1,9 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
+import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import {Picker} from "@react-native-picker/picker";
 
 const ChangeState = () => {
 
