@@ -93,17 +93,14 @@ const Register = () => {
 
             <View style={styles.formContainer}>
             {/* Required Fields */}
-            
-            <Picker
-                selectedValue={role}
-                onValueChange={(itemValue) => setRole(itemValue)}
-                style={styles.input}
-            >
-                <Picker.Item label="Selecione um tipo de conta" value="" enabled={false} />
+
+                <Text style={styles.title}>Tipo de Conta:</Text>
+
+                <Picker selectedValue={role} onValueChange={(itemValue) => setRole(itemValue)} style={styles.input}>
                 <Picker.Item label="Registered User" value="Registered User" />
                 <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
                 <Picker.Item label="Partner Operator" value="Partner Operator" />
-            </Picker>
+                </Picker>
 
             <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={username} onChangeText={setUsername} autoCapitalize="none"/>
             <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address"/>

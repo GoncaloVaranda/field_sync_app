@@ -1,17 +1,19 @@
 import {useLocalSearchParams, useRouter} from "expo-router";
 import AuthService from "@/services/Integration";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-
+import BackButton from "@/app/utils/back_button";
+import React, {useState} from "react";
+import { Picker } from '@react-native-picker/picker';
 
 const Changeprivacy = () => {
     const router = useRouter();
-    const { token, username } = useLocalSearchParams();
-    // const privacy
+    const { username, token } = useLocalSearchParams();
+    const [privacy, setPrivacy] = useState("");
 
     const handleChangePrivacy = async () => {
 
         try {
-            const data = await AuthService.changePassword(
+            const data = await AuthService.changePrivacy(
                 token,
                 privacy
             );
@@ -47,19 +49,16 @@ const Changeprivacy = () => {
 
                 <View style={styles.formContainer}>
                     <Text style={styles.smallerText}>
-                        Altere as configurações de privacidade da sua conta. Quando ativado, seu perfil será privado.
+                        Altere as configurações de privacidade da sua conta. Selecione entre público e privado.
                     </Text>
 
                     <View style={styles.privacyOption}>
-                        <Text style={styles.privacyText}>Perfil Privado</Text>
-                        <Switch
-                            value={isPrivate}
-                            onValueChange={setIsPrivate}
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={isPrivate ? "#f5dd4b" : "#f4f3f4"}
-                        />
+                        <Text style={styles.privacyText}>Definir privacidade:</Text>
+                        <Picker selectedValue={privacy} onValueChange={(value) => setPrivacy(value)}>
+                            <Picker.Item label="Público" value="public" />
+                            <Picker.Item label="Privado" value="private" />
+                        </Picker>
                     </View>
-
                     <View style={styles.buttonContainer}>
                         <Button
                             title="Confirmar alterações"
@@ -80,6 +79,16 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         paddingHorizontal: 25,
+    },
+    input: {
+        height: 50,
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        marginBottom: 15,
+        fontSize: 16,
+        backgroundColor: '#fff',
     },
     backButtonWrapper: {
         position: 'absolute',
@@ -124,3 +133,5 @@ const styles = StyleSheet.create({
         color: '#333',
     },
 });
+
+export default Changeprivacy;
