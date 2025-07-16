@@ -50,6 +50,7 @@ const CheckAccountState = () => {
 
                 {accountData && (
                     <View style={styles.resultContainer}>
+
                         <Text style={styles.resultTitle}>Dados da Conta:</Text>
                         {Object.entries(accountData).map(([key, value]) => (
                             <Text key={key} style={styles.resultText}>

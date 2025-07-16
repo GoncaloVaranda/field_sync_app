@@ -359,6 +359,7 @@ export default class AuthService {
       console.error('Falha na requisição:', err);
       throw err;
     }
+
   };
 
 }
