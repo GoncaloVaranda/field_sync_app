@@ -28,17 +28,40 @@ export default function Accmanagement() {
         <View style={styles.buttonsContainer}>
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changeattributes?token=${token}&username=${username}`)}
+            onPress={() => router.push(`/changeattributes?token=${token}&username=${username}&role=${role}`)}
             >
             <Text style={styles.buttonText}>Alterar Atributos</Text>
             </Pressable>
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changepassword?token=${token}&username=${username}`)}
+            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
             >
             <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
             </Pressable>
+
+            <Pressable
+            style={styles.button}
+            onPress={() => router.push(`/changeprivacy?token=${token}&username=${username}&role=${role}`)}
+            >
+            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            </Pressable>
+
+            <Pressable
+            style={styles.button}
+            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            >
+            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            </Pressable>
+
+            <Pressable
+            style={styles.button}
+            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            >
+            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            </Pressable>
+
+
         </View>
       </ScrollView>
 
