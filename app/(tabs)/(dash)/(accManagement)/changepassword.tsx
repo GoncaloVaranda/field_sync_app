@@ -19,8 +19,8 @@ export default function Changepassword() {
             const data = await AuthService.changePassword(
                 token,
                 currentPassword,
-                confirmation,
-                newPassword
+                newPassword,
+                confirmation
             );
 
             console.log("Palavra-Passe alterada com sucesso:", data);
@@ -54,10 +54,10 @@ export default function Changepassword() {
                         alterar os atributos </Text>
                     <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" value={currentPassword}
                                onChangeText={setPassword} secureTextEntry/>
-                    <TextInput style={styles.input} placeholder="Confirmação de Password" placeholderTextColor="#999" value={confirmation}
-                               onChangeText={setConfirmation} secureTextEntry/>
                     <TextInput style={styles.input} placeholder="Password Nova" placeholderTextColor="#999" value={newPassword}
                                onChangeText={setNewPassword} secureTextEntry/>
+                    <TextInput style={styles.input} placeholder="Confirmação de Password" placeholderTextColor="#999" value={confirmation}
+                               onChangeText={setConfirmation} secureTextEntry/>
 
                     <Text style={styles.smallerText}></Text>
 
