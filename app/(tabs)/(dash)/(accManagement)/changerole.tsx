@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-const ChangeRole = () => {
+export default function ChangeRole() {
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
@@ -128,5 +128,3 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
 });
-
-export default ChangeRole;

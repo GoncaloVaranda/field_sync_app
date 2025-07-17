@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const Changepassword = () => {
+export default function Changepassword() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
 
@@ -129,5 +129,3 @@ const styles = StyleSheet.create({
         color: "#555",
     },
 });
-
-export default Changepassword;

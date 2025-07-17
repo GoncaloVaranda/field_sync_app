@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const ListUsersRemovalRequest = () => {
+export default function ListUsersRemovalRequest() {
     const router = useRouter();
     const {token, username} = useLocalSearchParams();
     const [accountData, setAccountData] = useState<any[]>([]);
@@ -147,4 +147,3 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     }
 });
-export default ListUsersRemovalRequest;

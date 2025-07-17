@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
-const Changeprivacy = () => {
+export default function Changeprivacy() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [privacy, setPrivacy] = useState("");
@@ -131,5 +131,3 @@ const styles = StyleSheet.create({
     },
 
 });
-
-export default Changeprivacy;

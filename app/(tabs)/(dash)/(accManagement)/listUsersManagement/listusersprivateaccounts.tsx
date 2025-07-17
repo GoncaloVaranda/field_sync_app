@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const ListUsersPrivateAccount = () => {
+export default function ListUsersPrivateAccount() {
     const router = useRouter();
     const {token, username} = useLocalSearchParams();
     const [accountData, setAccountData] = useState<any[]>([]);
@@ -149,5 +149,3 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     }
 });
-
-export default ListUsersPrivateAccount;

@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-const ChangeState = () => {
+export default function ChangeState() {
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
@@ -136,6 +136,3 @@ const styles = StyleSheet.create({
         color: '#333',
     },
 });
-
-
-export default ChangeState;

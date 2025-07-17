@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const Changeattributes = () => {
+export default function Changeattributes() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
 
@@ -34,10 +34,7 @@ const Changeattributes = () => {
                 token,
                 password,
                 confirmation,
-                nationality,
-                residenceCountry,
-                address,
-                postalCode,
+                name,
                 phone1,
                 phone2,
                 nic,
@@ -46,7 +43,11 @@ const Changeattributes = () => {
                 nicExpiryDate,
                 financialId,
                 employer,
-                birthDate
+                address,
+                postalCode,
+                birthDate,
+                nationality,
+                residenceCountry
             );
 
             console.log("Atributos alterados com sucesso:", data);
@@ -166,6 +167,3 @@ const styles = StyleSheet.create({
         color: "#555",
     },
 });
-
-
-export default Changeattributes;

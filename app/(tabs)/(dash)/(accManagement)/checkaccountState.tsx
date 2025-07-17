@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 
-const CheckAccountState = () => {
+export default function CheckAccountState(){
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
@@ -142,5 +142,3 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     }
 });
-
-export default CheckAccountState;
