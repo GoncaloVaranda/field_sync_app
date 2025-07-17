@@ -1,10 +1,10 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-const changeRole = () => {
+const ChangeRole = () => {
 
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default changeRole;
+export default ChangeRole;
