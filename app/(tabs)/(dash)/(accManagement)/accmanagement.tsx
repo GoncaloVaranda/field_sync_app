@@ -66,6 +66,14 @@ export default function Accmanagement() {
             </Pressable>
 
             <Pressable
+                style={styles.button}
+                onPress={() => router.push(`/changestatetoremovalrequest?token=${token}&username=${username}&role=${role}`)}
+            >
+                <Text style={styles.buttonText}>Mudar estado para `pedido de remoção`</Text>
+
+            </Pressable>
+
+            <Pressable
             style={styles.button}
             onPress={() => router.push(`/checkaccountState?token=${token}&username=${username}&role=${role}`)}
             >

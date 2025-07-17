@@ -301,12 +301,42 @@ export default class AuthService {
 
 
   static async changeState(token, targetUsername, state) {
-    const url = `${BASE_URL}/change-state`;
+    const url = `${BASE_URL}/change-state/`;
 
     const payload = {
       token,
       targetUsername,
       state
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+      }
+
+      return await response.json();
+
+    } catch (err) {
+      console.error('Falha na requisição:', err);
+      throw err;
+    }
+  };
+
+  static async changeStateToRemovalRequest(token) {
+    const url = `${BASE_URL}/change-state/removal-request`;
+
+    const payload = {
+      token,
     };
 
     try {
