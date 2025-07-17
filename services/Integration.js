@@ -172,6 +172,7 @@ export default class AuthService {
   };
 
 
+
   static async changePassword(token, currentPassword, confirmation, newPassword) {
     const url = `${BASE_URL}/change-password`;
 
