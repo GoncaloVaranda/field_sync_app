@@ -44,21 +44,35 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changeprivacy?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Mudar Privacidade</Text>
             </Pressable>
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            onPress={() => router.push(`/changerole?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Mudar tipo de conta</Text>
             </Pressable>
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            onPress={() => router.push(`/changestate?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Mudar estado</Text>
+            </Pressable>
+
+            <Pressable
+                style={styles.button}
+                onPress={() => router.push(`/checkaccountState?token=${token}&username=${username}&role=${role}`)}
+            >
+                <Text style={styles.buttonText}>Verificar o estado da conta</Text>
+            </Pressable>
+
+            <Pressable
+                style={styles.button}
+                onPress={() => router.push(`../listusersmanagement?token=${token}&username=${username}&role=${role}`)}
+            >
+                <Text style={styles.buttonText}>Listar contas</Text>
             </Pressable>
 
 
