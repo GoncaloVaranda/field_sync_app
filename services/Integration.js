@@ -436,6 +436,7 @@ export default class AuthService {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(payload),
+
       });
 
       if (!response.ok) {

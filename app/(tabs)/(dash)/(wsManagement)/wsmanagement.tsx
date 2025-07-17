@@ -12,6 +12,7 @@ export default function Wsmanagement() {
         <View style={styles.container}>
             <BackButton/>
 
+
             <LogoutModal
                 username={username.toString()}
                 token={token.toString()}
