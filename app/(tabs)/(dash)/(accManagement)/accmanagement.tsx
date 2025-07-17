@@ -69,7 +69,13 @@ export default function Accmanagement() {
 
             </Pressable>
 
+            <Pressable
+                style={styles.button}
+                onPress={() => router.push(`/listUsersManagement/listusersmanagement?token=${token}&username=${username}&role=${role}`)}
+            >
+                <Text style={styles.buttonText}>Operações de listar</Text>
 
+            </Pressable>
 
         </View>
       </ScrollView>
