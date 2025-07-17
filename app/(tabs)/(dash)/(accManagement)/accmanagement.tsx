@@ -70,7 +70,7 @@ export default function Accmanagement() {
 
             <Pressable
                 style={styles.button}
-                onPress={() => router.push(`../listusersmanagement?token=${token}&username=${username}&role=${role}`)}
+                onPress={() => router.push(`/listUsersManagement/listusersmanagement?token=${token}&username=${username}&role=${role}`)}
             >
                 <Text style={styles.buttonText}>Listar contas</Text>
             </Pressable>

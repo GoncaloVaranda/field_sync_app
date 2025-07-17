@@ -20,7 +20,7 @@ export default function Listusersmanagement() {
                 router={router}
             />
 
-            <Text style={styles.title}>Gestão de Contas</Text>
+            <Text style={styles.title}>Operações de listar</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
 
@@ -28,21 +28,21 @@ export default function Listusersmanagement() {
                 <View style={styles.buttonsContainer}>
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/listusers?token=${token}&username=${username}&role=${role}`)}
+                        onPress={() => router.push(`/listUsersManagement/listusers?token=${token}&username=${username}&role=${role}`)}
                     >
                         <Text style={styles.buttonText}>Listar utilizadores</Text>
                     </Pressable>
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/listusersprivateaccounts?token=${token}&username=${username}&role=${role}`)}
+                        onPress={() => router.push(`/listUsersManagement/listusersprivateaccounts?token=${token}&username=${username}&role=${role}`)}
                     >
                         <Text style={styles.buttonText}>Listar utilizadores com contas privadas</Text>
                     </Pressable>
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/listusersremovalrequest?token=${token}&username=${username}&role=${role}`)}
+                        onPress={() => router.push(`/listUsersManagement/listusersremovalrequest?token=${token}&username=${username}&role=${role}`)}
                     >
                         <Text style={styles.buttonText}>Listar utilizadores com pedido de remoção</Text>
                     </Pressable>
