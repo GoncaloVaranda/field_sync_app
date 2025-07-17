@@ -27,7 +27,7 @@ const Changeattributes = () => {
     const [residenceCountry, setResidenceCountry] = useState("");
 
 
-    const handleChangeAttributes = async () => {
+    const HandleChangeAttributes = async () => {
 
         try {
             const data = await AuthService.changeAttributes(
@@ -102,8 +102,8 @@ const Changeattributes = () => {
                     <View style={styles.buttonContainer}>
                         <Button
                             title="Confirmar alterações"
-                            onPress={handleChangeAttributes}
-                            disabled={!password || !confirmation || !name}
+                            onPress={HandleChangeAttributes}
+                            disabled={!password || !confirmation}
                         />
                     </View>
                 </View>

@@ -120,6 +120,8 @@ export default class AuthService {
       birthDate,
       nationality,
       residenceCountry
+
+
   ){
     const url = `${BASE_URL}/change-attributes`; // endpoint REST de registo
 
@@ -132,19 +134,19 @@ export default class AuthService {
       password,
       confirmation,
       name,
-      phone1,
-      phone2,
-      nic,
-      nicIssueDate,
-      nicIssuePlace,
-      nicExpiryDate,
-      financialId,
-      employer,
-      address,
-      postalCode,
-      birthDate,
-      nationality,
-      residenceCountry
+      phone1: phone1 || "",
+      phone2: phone2 || "",
+      nic: nic || "",
+      nicIssueDate: nicIssueDate || "",
+      nicIssuePlace: nicIssuePlace || "",
+      nicExpiryDate: nicExpiryDate || "",
+      financialId: financialId || "",
+      employer: employer || "",
+      address: address || "",
+      postalCode: postalCode || "",
+      birthDate: birthDate || "",
+      nationality: nationality || "",
+      residenceCountry: residenceCountry || ""
     };
 
     try {
