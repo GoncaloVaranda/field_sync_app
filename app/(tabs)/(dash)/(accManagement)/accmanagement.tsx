@@ -30,7 +30,7 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changeattributes?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Alterar Atributos</Text>
+            <Text style={styles.buttonText}>Alterar Atributos de uma conta</Text>
             </Pressable>
 
             <Pressable
@@ -44,22 +44,31 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changeprivacy?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Alterar Privacidade de uma Conta</Text>
             </Pressable>
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            onPress={() => router.push(`/changerole?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Alterar o Tipo de uma conta</Text>
             </Pressable>
 
             <Pressable
             style={styles.button}
-            onPress={() => router.push(`/changepassword?token=${token}&username=${username}&role=${role}`)}
+            onPress={() => router.push(`/changestate?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
+            <Text style={styles.buttonText}>Alterar o Estado de uma conta</Text>
             </Pressable>
+
+            <Pressable
+            style={styles.button}
+            onPress={() => router.push(`/checkaccountState?token=${token}&username=${username}&role=${role}`)}
+            >
+            <Text style={styles.buttonText}>Ver o Estado de uma conta</Text>
+
+            </Pressable>
+
 
 
         </View>
