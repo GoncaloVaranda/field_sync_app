@@ -24,15 +24,20 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router
           console.log("Logged out");
           setIsModalVisible(false); // Hide the modal
               
-        
 
           router.dismissAll();
           router.dismissAll();
+          router.dismissAll();
+          router.dismissAll();
+          
           } catch (err: unknown) {
               if (err instanceof Error) {
                   console.log(err.message);
                   router.dismissAll();
                   router.dismissAll();
+                  router.dismissAll();
+                  router.dismissAll();
+
                   Alert.alert('Error', err.message, [
                                { text: 'I understand' },
                                 ]);
@@ -68,11 +73,11 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router
             {isLoading ? (
                 <ActivityIndicator size="large" color="#51ff009f" />
                  ) : (
-                <Button title="Logout" onPress={handleLogout} />
+                <Button title="Logout" onPress={handleLogout} color="#51ff009f"/>
               )}
             <Button
-              title="Cancel"
-              onPress={() => setIsModalVisible(false)}
+              title="Cancel" color="#51ff009f"
+              onPress={() => setIsModalVisible(false) }
             />
           </View>
         </View>

@@ -1,5 +1,6 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
+import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -39,11 +40,11 @@ export default function ChangeRole() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                <View style={styles.backButtonWrapper}>
-                    <BackButton/>
-                </View>
+            <BackButton/>
 
+            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+
+                
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar tipo de Conta</Text>
                 </View>
@@ -60,9 +61,18 @@ export default function ChangeRole() {
                         autoCapitalize="none"
                     />
 
-                    TODO: Picker para Tipo de Conta!
+                    <Text style={styles.title}>Tipo de Conta:</Text>
 
-                    <TextInput style={styles.input} placeholder="Novo tipo de conta" placeholderTextColor="#999" value={role} onChangeText={setRole} autoCapitalize="none"/>
+                    <Picker selectedValue={role} onValueChange={(itemValue) => setRole(itemValue)} style={styles.input}>
+                    <Picker.Item label="Registered User" value="Registered User" />
+                    <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
+                    <Picker.Item label="Partner Operator" value="Partner Operator" />
+                    <Picker.Item label="Partner Representative Back-Office" value="Partner Representative Back-Office" />
+                    <Picker.Item label="Sheet General Viewer Back-Office" value="Sheet General Viewer Back-Office" />
+                    <Picker.Item label="Sheet Detailed Viewer Back-Office" value="Sheet Detailed Viewer Back-Office" />
+                    <Picker.Item label="Sheet Manager Back-Office" value="Sheet Manager Back-Office" />
+                    <Picker.Item label="System Back-Office" value="System Back-Office" />
+                    </Picker>
 
                     <View style={styles.buttonContainer}>
                         <Button
@@ -87,12 +97,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingHorizontal: 25,
     },
-    backButtonWrapper: {
-        position: 'absolute',
-        top: 40,
-        left: 15,
-        zIndex: 10,
-    },
     mainContent: {
         marginTop: 80,
         paddingBottom: 40,
@@ -101,7 +105,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 30,
+        marginBottom: 10,
         color: '#333',
     },
     smallerText: {
@@ -112,10 +116,10 @@ const styles = StyleSheet.create({
     input: {
         height: 50,
         borderColor: "#ddd",
-        borderWidth: 1,
+        borderWidth: 2,
         borderRadius: 8,
         paddingHorizontal: 15,
-        marginBottom: 15,
+        marginBottom: 30,
         fontSize: 16,
         backgroundColor: '#fff',
     },

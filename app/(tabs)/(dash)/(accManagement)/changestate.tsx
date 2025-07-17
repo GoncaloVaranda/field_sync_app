@@ -53,7 +53,6 @@ export default function ChangeState() {
                     <View style={styles.stateOption}>
                         <Text style={styles.stateText}>Definir privacidade:</Text>
                         <Picker selectedValue={state} onValueChange={(value) => setState(value)}>
-                            <Picker.Item label="Pedido de remoção" value="removal request" />
                             <Picker.Item label="Activa" value="active" />
                             <Picker.Item label="Suspensa" value="suspended" />
                             <Picker.Item label="Desactiva" value="disabled" />

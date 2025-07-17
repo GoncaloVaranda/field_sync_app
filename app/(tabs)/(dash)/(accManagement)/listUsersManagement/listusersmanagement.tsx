@@ -33,19 +33,23 @@ export default function Listusersmanagement() {
                         <Text style={styles.buttonText}>Listar utilizadores</Text>
                     </Pressable>
 
+                    {(role === "Root" || role === "System Back-Office" ) &&(
                     <Pressable
                         style={styles.button}
                         onPress={() => router.push(`/listUsersManagement/listusersprivateaccounts?token=${token}&username=${username}&role=${role}`)}
                     >
                         <Text style={styles.buttonText}>Listar utilizadores com contas privadas</Text>
                     </Pressable>
+                    )}
 
+                    {(role === "Root" || role === "System Back-Office" ) &&(
                     <Pressable
                         style={styles.button}
                         onPress={() => router.push(`/listUsersManagement/listusersremovalrequest?token=${token}&username=${username}&role=${role}`)}
                     >
                         <Text style={styles.buttonText}>Listar utilizadores com pedido de remoção</Text>
                     </Pressable>
+                    )}
 
                 </View>
             </ScrollView>

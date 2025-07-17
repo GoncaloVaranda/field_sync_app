@@ -40,19 +40,23 @@ export default function Accmanagement() {
             <Text style={styles.buttonText}>Mudar Palavra-passe</Text>
             </Pressable>
 
+            {(role === "Registered User" ) &&(
             <Pressable
             style={styles.button}
             onPress={() => router.push(`/changeprivacy?token=${token}&username=${username}&role=${role}`)}
             >
             <Text style={styles.buttonText}>Alterar Privacidade de uma Conta</Text>
             </Pressable>
+            )}
 
+            {(role === "Root" || role === "System Back-Office" ) &&(
             <Pressable
             style={styles.button}
             onPress={() => router.push(`/changerole?token=${token}&username=${username}&role=${role}`)}
             >
             <Text style={styles.buttonText}>Alterar o Tipo de uma conta</Text>
             </Pressable>
+            )}
 
             <Pressable
             style={styles.button}
