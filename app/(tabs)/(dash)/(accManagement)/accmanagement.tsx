@@ -89,6 +89,14 @@ export default function Accmanagement() {
 
             </Pressable>
 
+            <Pressable
+                style={styles.button}
+                onPress={() => router.push(`/removeuser?token=${token}&username=${username}&role=${role}`)}
+            >
+                <Text style={styles.buttonText}>Remover conta</Text>
+
+            </Pressable>
+
         </View>
       </ScrollView>
 
