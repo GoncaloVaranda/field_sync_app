@@ -182,9 +182,7 @@ export default function ImportWorksheet() {
                             <Text style={styles.selectedFileSize}>
                                 Tamanho: {(selectedFile.size! / 1024).toFixed(2)} KB
                             </Text>
-                        )
-                        }
-                        </View>
+                            </View>
                     )}
 
                     {geoJsonData && (
@@ -227,7 +225,7 @@ export default function ImportWorksheet() {
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoTitle}>Requisitos do GeoJSON:</Text>
                         <Text style={styles.infoText}>• Formatos aceites: .json, .geojson</Text>
-                        <Text style={styles.infoText}>• Deve conter "type", "metadata", "features" e "crs"</Text>
+                        <Text style={styles.infoText}>• Deve conter type, metadata, features e crs</Text>
                         <Text style={styles.infoText}>• Máximo de 5 operações por folha</Text>
                         <Text style={styles.infoText}>• Metadata deve incluir ID único da folha</Text>
                         <Text style={styles.infoText}>• Features representam as parcelas/polígonos</Text>
