@@ -4,11 +4,12 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import WorksheetService from "@/services/SheetsIntegration";
 
 export default function ImportWorksheet() {
     const router = useRouter();
     const { token, username, role } = useLocalSearchParams();
-    
+
     const [worksheetName, setWorksheetName] = useState("");
     const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
     const [geoJsonData, setGeoJsonData] = useState("");
@@ -25,13 +26,13 @@ export default function ImportWorksheet() {
             if (!result.canceled && result.assets && result.assets.length > 0) {
                 const file = result.assets[0];
                 setSelectedFile(file);
-                
+
                 // Read the file content
                 try {
                     const response = await fetch(file.uri);
                     const fileContent = await response.text();
                     setGeoJsonData(fileContent);
-                    
+
                     Alert.alert('Sucesso', `Ficheiro "${file.name}" carregado com sucesso!`, [
                         { text: 'OK' }
                     ]);
@@ -73,16 +74,10 @@ export default function ImportWorksheet() {
 
             // Prepare the worksheet data for the API
             const worksheetData = {
-                token,
-                type: parsedGeoJson.type,
-                features: parsedGeoJson.features,
-                metadata: parsedGeoJson.metadata,
-                crs: parsedGeoJson.crs || null,
-                name: parsedGeoJson.name || ""
                 ...parsedGeoJson
             };
 
-            const data = await AuthService.importWorksheet(token, worksheetData);
+            const data = await WorksheetService.importWorksheet(token as string, worksheetData);
 
             console.log("Folha de obra importada com sucesso:", data);
             Alert.alert('Sucesso', 'Folha de obra importada com sucesso!', [
@@ -116,7 +111,7 @@ export default function ImportWorksheet() {
 
         try {
             const parsed = JSON.parse(geoJsonData);
-            
+
             // Basic validation
             const errors = [];
             if (!parsed.type) errors.push("- Campo 'type' em falta");
@@ -152,7 +147,7 @@ export default function ImportWorksheet() {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <BackButton />
-                
+
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Importar Folha de Obra</Text>
                     <Text style={styles.subtitle}>
@@ -162,7 +157,7 @@ export default function ImportWorksheet() {
 
                 <View style={styles.formContainer}>
                     <Text style={styles.sectionTitle}>Informações da Folha</Text>
-                    
+
                     <TextInput
                         style={styles.input}
                         placeholder="Nome da folha de obra (opcional)"
@@ -173,7 +168,7 @@ export default function ImportWorksheet() {
                     />
 
                     <Text style={styles.sectionTitle}>Dados GeoJSON</Text>
-                    
+
                     <TouchableOpacity style={styles.filePickerButton} onPress={pickDocument}>
                         <Text style={styles.filePickerButtonText}>
                             📁 Selecionar Ficheiro GeoJSON
@@ -187,8 +182,8 @@ export default function ImportWorksheet() {
                             <Text style={styles.selectedFileSize}>
                                 Tamanho: {(selectedFile.size! / 1024).toFixed(2)} KB
                             </Text>
-                            </View>
-                                            )                        }
+                        </View>
+                    )                        }
 
                     {geoJsonData && (
                         <View style={styles.previewContainer}>
@@ -237,8 +232,6 @@ export default function ImportWorksheet() {
                     </View>
                 </View>
             </ScrollView>
-                    )
-                    }
         </SafeAreaView>
     );
 }
