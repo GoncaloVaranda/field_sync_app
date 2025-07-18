@@ -9,14 +9,14 @@ export default function RemoveUser() {
 
     const router = useRouter();
     const {token, username} = useLocalSearchParams();
-    const [targetID, setTargetID] = useState("");
+    const [targetId, setTargetId] = useState("");
 
     const HandleRemoveUser = async () => {
         try {
-            const data = await AuthService.removeUser(token, targetID);
+            const data = await AuthService.removeUser(token, targetId);
 
-            console.log("Estado da conta alterado com sucesso:", data);
-            Alert.alert('Success', 'Account state successfully changed!', [
+            console.log("Conta removida com sucesso:", data);
+            Alert.alert('Success', 'Account successfully removed!', [
                 {text: 'OK'},
             ]);
             router.back();
@@ -38,12 +38,12 @@ export default function RemoveUser() {
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Remover conta</Text>
                 </View>
-                <Text style={styles.inputLabel}>ID de conta</Text>
+                <Text style={styles.inputLabel}>Digite o Username ou um email</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Digite o ID da conta"
-                    value={targetID}
-                    onChangeText={setTargetID}
+                    placeholder="Username/Email"
+                    value={targetId}
+                    onChangeText={setTargetId}
                     autoCapitalize="none"
                     keyboardType="default"
                 />
