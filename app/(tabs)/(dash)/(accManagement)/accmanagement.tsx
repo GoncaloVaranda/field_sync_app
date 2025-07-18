@@ -92,7 +92,7 @@ export default function Accmanagement() {
             </Pressable>
             )}
 
-            {(role === "Root" ) &&(
+            {!(role === "Root" ) &&(
             <Pressable
                 style={styles.button}
                 onPress={() => router.push(`/changestatetoremovalrequest?token=${token}&username=${username}&role=${role}`)}
