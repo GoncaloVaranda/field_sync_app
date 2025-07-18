@@ -73,7 +73,12 @@ export default function ImportWorksheet() {
 
             // Prepare the worksheet data for the API
             const worksheetData = {
-                name: worksheetName || "",
+                token,
+                type: parsedGeoJson.type,
+                features: parsedGeoJson.features,
+                metadata: parsedGeoJson.metadata,
+                crs: parsedGeoJson.crs || null,
+                name: parsedGeoJson.name || ""
                 ...parsedGeoJson
             };
 
