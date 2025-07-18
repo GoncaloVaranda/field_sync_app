@@ -31,7 +31,7 @@ export default function RemoveWorksheet() {
     const handleRemoveWorksheet = async () => {
         setIsLoading(true);
         try {
-            const data = await WorksheetService.removeWorksheet(token, parseInt(worksheetId));
+            const data = await WorksheetService.removeWorksheet(token, worksheetId);
 
             console.log("Folha de obra removida com sucesso:", data);
             Alert.alert('Sucesso', 'Folha de obra removida com sucesso!', [

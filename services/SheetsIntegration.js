@@ -1,6 +1,7 @@
 const BASE_URL = "https://fieldsync-adc.oa.r.appspot.com/rest"; // ajusta para a tua URL
 
 export default class WorksheetService {
+    
     static async importWorksheet(token, worksheetData) {
         const url = `${BASE_URL}/worksheet/import-worksheet`;
 
@@ -109,10 +110,10 @@ export default class WorksheetService {
     };
 
     static async removeWorksheet(token, worksheetId) {
-        const url = `${BASE_URL}/worksheets/remove-worksheet`;
+        const url = `${BASE_URL}/worksheet/remove-worksheet`;
         const payload = {
-            token: token,
-            id: worksheetId
+            id: worksheetId,
+            token: token,  
         };
 
         try {
