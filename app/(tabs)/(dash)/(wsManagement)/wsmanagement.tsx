@@ -17,8 +17,7 @@ export default function Wsmanagement() {
                 username={username.toString()}
                 token={token.toString()}
                 role={role?.toString()}
-                router={router}
-            />
+            />  
 
             <Text style={styles.title}>Gestão de Folhas de Obra</Text>
 
