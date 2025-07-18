@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, Button, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import AuthService from "../../services/Integration";
+import AuthService from "../../services/UsersIntegration";
 
 interface LogoutModalProps {
   username: string;

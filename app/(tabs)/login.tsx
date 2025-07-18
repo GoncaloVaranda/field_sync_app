@@ -2,7 +2,7 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import AuthService from "../../services/Integration";
+import AuthService from "../../services/UsersIntegration";
 import BackButton from "../utils/back_button";
 
 const Login = () => {

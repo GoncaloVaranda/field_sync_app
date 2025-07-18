@@ -1,5 +1,5 @@
 import BackButton from "@/app/utils/back_button";
-import AuthService from "@/services/Integration";
+import AuthService from "@/services/UsersIntegration";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {useState} from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";

@@ -1,5 +1,5 @@
 import BackButton from "@/app/utils/back_button";
-import AuthService from "@/services/Integration";
+import AuthService from "@/services/UsersIntegration";
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
