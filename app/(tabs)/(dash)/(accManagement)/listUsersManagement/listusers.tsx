@@ -2,15 +2,18 @@ import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 
 export default function ListUsers() {
     const router = useRouter();
     const {token, username} = useLocalSearchParams();
+    const [isListingVisible, setIsListingVisible] = useState(false);
     const [accountData, setAccountData] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const HandleListUsers = async () => {
+        setIsLoading(true);
         try {
             const data = await AuthService.listUsers(
                 token,
@@ -18,10 +21,8 @@ export default function ListUsers() {
 
             console.log("Utilizadores listados com sucesso.", data);
             setAccountData(data);
-            Alert.alert('Success', 'Users listed successfully!', [
-                {text: 'OK'},
-            ]);
-            
+            setIsListingVisible(true);
+
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -31,6 +32,8 @@ export default function ListUsers() {
             } else {
                 console.log("Unexpected error:", err);
             }
+        }finally{
+            setIsLoading(false);
         }
     };
 
@@ -43,29 +46,38 @@ export default function ListUsers() {
                 </View>
 
             
-
+                
                 <View style={styles.buttonContainer}>
-                    <Button title="Pesquisar" onPress={HandleListUsers}/>
+                    {isLoading ? (
+                          <ActivityIndicator size="large" color="#51ff009f" />
+                          ) : (
+                          <Button title="Pesquisar" onPress={HandleListUsers} color="#51ff009f" />
+                        )}
                 </View>
+            
 
+                
+                {accountData.length > 0 && !isListingVisible &&  (
+                <View style={styles.resultContainer} >
+                    <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>
 
-                {accountData.length === 0 ? (
-                    <View style={styles.resultContainer}>
-                        <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>
-                        {accountData.map((account, index) => (
-                            <View key={index} style={{marginBottom: 16}}>
-                                {Object.entries(account).map(([key, value]) => (
-                                    <Text key={key} style={styles.resultText}>
-                                        {key}: {String(value)}
-                                    </Text>
-                                ))}
-                                <View style={{height: 1, backgroundColor: '#eee', marginVertical: 8}} />
-                            </View>
+                    {accountData.map((account, index) => (
+                    <View key={index} style={{ marginBottom: 16 }}>
+                        {Object.entries(account).map(([key, value]) => (
+                        <Text key={key} style={styles.resultText} >
+                            {key}: {String(value)}
+                        </Text>
                         ))}
+                        <View style={{ height: 1, backgroundColor: "#eee", marginVertical: 8 }} />
                     </View>
-                ) : (
+                    ))}
+                </View>
+                )}
+                
+                {isListingVisible && accountData.length === 0 && !isLoading &&(
                     <Text style={styles.smallerText}>Nenhum resultado encontrado</Text>
                 )}
+
             </ScrollView>
         </SafeAreaView>
 

@@ -62,6 +62,7 @@ const Login = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
        
           
