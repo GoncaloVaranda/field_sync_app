@@ -486,11 +486,11 @@ export default class AuthService {
     }
   };
 
-  static async removeUser(token, targetID) {
+  static async removeUser(token, targetId) {
     const url = `${BASE_URL}/remove-user`;
     const payload = {
       token,
-      targetID
+      targetId
     };
 
     try {
