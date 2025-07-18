@@ -60,6 +60,10 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role}) => {
         onRequestClose={() => setIsModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
+          <Pressable
+              style={styles.modalOverlay}
+              onPress={() => setIsModalVisible(false)}   // fecha ao tocar fora
+            />
           <View style={styles.modalContainer}>
             <Text style={styles.modalUsername}>{username}</Text>
             <Text style={styles.modalRole}>Role:  {role}</Text>
