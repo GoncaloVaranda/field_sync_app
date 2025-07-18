@@ -73,7 +73,12 @@ export default function ImportWorksheet() {
 
             // Prepare the worksheet data for the API
             const worksheetData = {
-                name: worksheetName || "",
+                token,
+                type: parsedGeoJson.type,
+                features: parsedGeoJson.features,
+                metadata: parsedGeoJson.metadata,
+                crs: parsedGeoJson.crs || null,
+                name: parsedGeoJson.name || ""
                 ...parsedGeoJson
             };
 
@@ -183,7 +188,7 @@ export default function ImportWorksheet() {
                                 Tamanho: {(selectedFile.size! / 1024).toFixed(2)} KB
                             </Text>
                             </View>
-                    )}
+                                            )                        }
 
                     {geoJsonData && (
                         <View style={styles.previewContainer}>
@@ -232,6 +237,8 @@ export default function ImportWorksheet() {
                     </View>
                 </View>
             </ScrollView>
+                    )
+                    }
         </SafeAreaView>
     );
 }
