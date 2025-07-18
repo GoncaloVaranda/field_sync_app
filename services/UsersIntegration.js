@@ -517,34 +517,4 @@ export default class AuthService {
     }
   };
 
-  static async importWorksheet(token, worksheetData) {
-    const url = `${BASE_URL}/worksheets/worksheet-import`;
-    const payload = {
-      token,
-      ...worksheetData
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
-      }
-
-      return await response.json();
-
-    } catch (err) {
-      console.error('Falha na requisição de importação:', err);
-      throw err;
-    }
-  };
-
 }
