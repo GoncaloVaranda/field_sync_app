@@ -188,7 +188,7 @@ export default function ImportWorksheet() {
                                 Tamanho: {(selectedFile.size! / 1024).toFixed(2)} KB
                             </Text>
                             </View>
-                    )}
+                                            )                        }
 
                     {geoJsonData && (
                         <View style={styles.previewContainer}>
@@ -237,6 +237,8 @@ export default function ImportWorksheet() {
                     </View>
                 </View>
             </ScrollView>
+                    )
+                    }
         </SafeAreaView>
     );
 }
