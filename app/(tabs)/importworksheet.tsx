@@ -182,6 +182,8 @@ export default function ImportWorksheet() {
                             <Text style={styles.selectedFileSize}>
                                 Tamanho: {(selectedFile.size! / 1024).toFixed(2)} KB
                             </Text>
+                        )
+                        }
                         </View>
                     )}
 
