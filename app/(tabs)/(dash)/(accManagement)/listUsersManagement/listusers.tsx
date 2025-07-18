@@ -1,8 +1,8 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {useState} from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 
 export default function ListUsers() {
@@ -21,7 +21,7 @@ export default function ListUsers() {
             Alert.alert('Success', 'Users listed successfully!', [
                 {text: 'OK'},
             ]);
-            router.back();
+            
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -42,12 +42,14 @@ export default function ListUsers() {
                     <Text style={styles.title}>Listar contas com pedido de remoção</Text>
                 </View>
 
+            
+
                 <View style={styles.buttonContainer}>
                     <Button title="Pesquisar" onPress={HandleListUsers}/>
                 </View>
 
 
-                {accountData.length > 0 ? (
+                {accountData.length === 0 ? (
                     <View style={styles.resultContainer}>
                         <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>
                         {accountData.map((account, index) => (

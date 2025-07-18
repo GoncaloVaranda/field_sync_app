@@ -69,7 +69,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalUsername}>{username}</Text>
-            <Text style={styles.modalRole}>{role}</Text>
+            <Text style={styles.modalRole}>Role:  {role}</Text>
             {isLoading ? (
                 <ActivityIndicator size="large" color="#51ff009f" />
                  ) : (
