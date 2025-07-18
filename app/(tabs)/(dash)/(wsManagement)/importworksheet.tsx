@@ -10,7 +10,6 @@ export default function ImportWorksheet() {
     const router = useRouter();
     const { token, username, role } = useLocalSearchParams();
 
-    const [worksheetName, setWorksheetName] = useState("");
     const [selectedFile, setSelectedFile] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
     const [geoJsonData, setGeoJsonData] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +137,6 @@ export default function ImportWorksheet() {
     };
 
     const clearForm = () => {
-        setWorksheetName("");
         setSelectedFile(null);
         setGeoJsonData("");
     };
@@ -156,17 +154,6 @@ export default function ImportWorksheet() {
                 </View>
 
                 <View style={styles.formContainer}>
-                    <Text style={styles.sectionTitle}>Informações da Folha</Text>
-
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nome da folha de obra (opcional)"
-                        placeholderTextColor="#999"
-                        value={worksheetName}
-                        onChangeText={setWorksheetName}
-                        autoCapitalize="words"
-                    />
-
                     <Text style={styles.sectionTitle}>Dados GeoJSON</Text>
 
                     <TouchableOpacity style={styles.filePickerButton} onPress={pickDocument}>
@@ -226,7 +213,6 @@ export default function ImportWorksheet() {
                         <Text style={styles.infoTitle}>Requisitos do GeoJSON:</Text>
                         <Text style={styles.infoText}>• Formatos aceites: .json, .geojson</Text>
                         <Text style={styles.infoText}>• Deve conter type, metadata, features e crs</Text>
-                        <Text style={styles.infoText}>• Máximo de 5 operações por folha</Text>
                         <Text style={styles.infoText}>• Metadata deve incluir ID único da folha</Text>
                         <Text style={styles.infoText}>• Features representam as parcelas/polígonos</Text>
                     </View>
