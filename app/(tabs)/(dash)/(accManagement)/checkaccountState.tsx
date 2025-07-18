@@ -20,10 +20,10 @@ export default function CheckAccountState(){
             );
 
             console.log("Estado da conta apresentado com sucesso.", data);
+            setAccountData(data);
             Alert.alert('Success', 'Account state successfully showed!', [
                 { text: 'OK' },
             ]);
-            router.back();
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -43,19 +43,18 @@ export default function CheckAccountState(){
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Visualizar estado de conta</Text>
                 </View>
-                <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername} secureTextEntry/>
+                <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername}/>
 
                 <Button title="Pesquisar" onPress={HandleCheckAccountState}/>
 
                 {accountData && (
                     <View style={styles.resultContainer}>
-
                         <Text style={styles.resultTitle}>Dados da Conta:</Text>
-                        {Object.entries(accountData).map(([key, value]) => (
-                            <Text key={key} style={styles.resultText}>
-                                {key}: {String(value)}
-                            </Text>
-                        ))}
+                        <Text style={styles.resultText}>Username: {accountData.username}</Text>
+                        <Text style={styles.resultText}>Nome: {accountData.name}</Text>
+                        <Text style={styles.resultText}>ID: {accountData.id}</Text>
+                        <Text style={styles.resultText}>Estado: {accountData.state}</Text>
+                        <Text style={styles.resultText}>Role: {accountData.role}</Text>
                     </View>
                 )}
             </ScrollView>
