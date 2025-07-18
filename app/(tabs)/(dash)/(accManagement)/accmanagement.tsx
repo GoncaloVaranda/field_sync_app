@@ -29,7 +29,7 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changeattributes?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Alterar Atributos de uma conta</Text>
+            <Text style={styles.buttonText}>Alterar Atributos da Conta</Text>
             </Pressable>
 
             <Pressable
@@ -44,7 +44,7 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changeprivacy?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Alterar Privacidade de uma Conta</Text>
+            <Text style={styles.buttonText}>Alterar Estado de Privacidade da Conta</Text>
             </Pressable>
             )}
 
@@ -53,32 +53,33 @@ export default function Accmanagement() {
             style={styles.button}
             onPress={() => router.push(`/changerole?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Alterar o Tipo de uma conta</Text>
+            <Text style={styles.buttonText}>Alterar o Tipo de uma Conta</Text>
             </Pressable>
             )}
 
+            {(role === "Root" || role === "System Back-Office" ) &&(
             <Pressable
             style={styles.button}
             onPress={() => router.push(`/changestate?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Alterar o Estado de uma conta</Text>
+            <Text style={styles.buttonText}>Alterar o Estado de uma Conta</Text>
             </Pressable>
+            )}
 
-
+            {(role === "Root" || role === "System Back-Office" ) &&(
             <Pressable
             style={styles.button}
             onPress={() => router.push(`/checkaccountState?token=${token}&username=${username}&role=${role}`)}
             >
-            <Text style={styles.buttonText}>Ver o Estado de uma conta</Text>
-
+            <Text style={styles.buttonText}>Ver o Estado de uma Conta</Text>
             </Pressable>
+            )}
 
             <Pressable
                 style={styles.button}
                 onPress={() => router.push(`/listUsersManagement/listusersmanagement?token=${token}&username=${username}&role=${role}`)}
             >
                 <Text style={styles.buttonText}>Listar...</Text>
-
             </Pressable>
 
             {(role === "Root" || role === "System Back-Office" ) &&(
@@ -86,18 +87,20 @@ export default function Accmanagement() {
                 style={styles.button}
                 onPress={() => router.push(`/removeuser?token=${token}&username=${username}&role=${role}`)}
             >
-                <Text style={styles.buttonText}>Remover conta</Text>
+                <Text style={styles.buttonText}>Remover uma Conta</Text>
 
             </Pressable>
             )}
 
+            {(role === "Root" ) &&(
             <Pressable
                 style={styles.button}
                 onPress={() => router.push(`/changestatetoremovalrequest?token=${token}&username=${username}&role=${role}`)}
             >
-                <Text style={styles.buttonText}>Pedir remoção da conta</Text>
+                <Text style={styles.buttonText}>Pedir Remoção da Conta</Text>
 
             </Pressable>
+            )}
         </View>
       </ScrollView>
 
