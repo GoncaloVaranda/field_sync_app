@@ -40,10 +40,9 @@ export default function ChangeRole() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <BackButton/>
 
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-
+                <BackButton/>
                 
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar tipo de Conta</Text>
@@ -60,8 +59,6 @@ export default function ChangeRole() {
                         onChangeText={setTargetUsername}
                         autoCapitalize="none"
                     />
-
-                    <Text style={styles.title}>Tipo de Conta:</Text>
 
                     <Picker selectedValue={role} onValueChange={(itemValue) => setRole(itemValue)} style={styles.input}>
                     <Picker.Item label="Registered User" value="Registered User" />

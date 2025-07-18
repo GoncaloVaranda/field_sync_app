@@ -17,7 +17,6 @@ export default function Listusersmanagement() {
                 username={username.toString()}
                 token={token.toString()}
                 role = {role.toString()}
-                router={router}
             />
 
             <Text style={styles.title}>Operações de listar</Text>
