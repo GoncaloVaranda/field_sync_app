@@ -42,7 +42,7 @@ export default function ListUsers() {
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <BackButton/>
                 <View style={styles.mainContent}>
-                    <Text style={styles.title}>Listar contas com pedido de remoção</Text>
+                    <Text style={styles.title}>Listar contas</Text>
                 </View>
 
             
@@ -57,9 +57,9 @@ export default function ListUsers() {
             
 
                 
-                {accountData.length > 0 && !isListingVisible &&  (
+                {accountData.length > 0 && isListingVisible &&  (
                 <View style={styles.resultContainer} >
-                    <Text style={styles.resultTitle}>Contas com pedido de remoção:</Text>
+                    <Text style={styles.resultTitle}>Contas:</Text>
 
                     {accountData.map((account, index) => (
                     <View key={index} style={{ marginBottom: 16 }}>
