@@ -1,26 +1,46 @@
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/Integration";
-import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import React from "react";
+import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function ChangeStateToRemovalRequest() {
 
     const router = useRouter();
     const {token, username} = useLocalSearchParams();
 
+
+    const confirMationButton = () => {
+        Alert.alert(
+                'Confirmar',
+                'Tens a certeza?',
+                [{
+                    text: 'Sim',
+                    style: 'default',
+                    onPress: () => HandleChangeStateToRemovalRequest(),
+                },
+                {
+                    text: 'Não',
+                    style: 'cancel',
+                },],
+            );
+    }
+
     const HandleChangeStateToRemovalRequest = async () => {
         try {
+            
+            
             const data = await AuthService.changeStateToRemovalRequest(
                 token
             );
 
-            console.log("Estado da conta alterado com sucesso:", data);
-            Alert.alert('Success', 'Account state successfully changed!', [
+            console.log("Pedido de remoção efetuado com sucesso:", data);
+            Alert.alert('Success', 'Pedido de remoção efetuado', [
                 {text: 'OK'},
             ]);
-            router.back();
+            
+            router.dismissTo('/');
+            
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -37,15 +57,15 @@ export default function ChangeStateToRemovalRequest() {
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 <BackButton/>
                 <View style={styles.mainContent}>
-                    <Text style={styles.title}>Mudar estado para pedido de remoção</Text>
+                    <Text style={styles.title}>Pedir Remoção da Conta</Text>
                 </View>
 
                 <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Deseja deixar a sua conta com `Pedido de remoção`? </Text>
+                    <Text style={styles.smallerText}>Deseja efetuar a remoção da sua conta? </Text>
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Confirmar alteração"
-                            onPress={HandleChangeStateToRemovalRequest}
+                            title="Confirmar remoção"
+                            onPress={confirMationButton}
                         />
                     </View>
                 </View>

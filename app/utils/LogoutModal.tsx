@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Router } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, Button, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import AuthService from "../../services/Integration";
@@ -8,11 +8,10 @@ interface LogoutModalProps {
   username: string;
   token: string;
   role: string;
-  router: Router;
-  //onLogout: (token: string) => void;
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role}) => {
+  const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,18 +24,12 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role, router
           setIsModalVisible(false); // Hide the modal
               
 
-          router.dismissAll();
-          router.dismissAll();
-          router.dismissAll();
-          router.dismissAll();
+          router.dismissTo('/');
           
           } catch (err: unknown) {
               if (err instanceof Error) {
                   console.log(err.message);
-                  router.dismissAll();
-                  router.dismissAll();
-                  router.dismissAll();
-                  router.dismissAll();
+                  router.dismissTo('/');
 
                   Alert.alert('Error', err.message, [
                                { text: 'I understand' },

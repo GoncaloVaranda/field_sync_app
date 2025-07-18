@@ -13,7 +13,7 @@ export default function Dashboard() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-      <LogoutModal username={username.toString()} token={token.toString()} role={role.toString()} router={router} />
+      <LogoutModal username={username.toString()} token={token.toString()} role={role.toString()} />
 
 
       <View style={styles.logoContainer}>

@@ -1,8 +1,9 @@
 
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Image, Text, View } from "react-native";
 
 export default function Index() {
+  const router = useRouter();
 
   return (
     <View className ="flex-1 justify-start items-center pt-40">
