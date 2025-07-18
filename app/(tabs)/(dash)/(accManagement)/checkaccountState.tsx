@@ -12,6 +12,7 @@ export default function CheckAccountState(){
     const [targetUsername, setTargetUsername] = useState("");
     const [accountData, setAccountData] = useState<any>(null);
 
+
     const HandleCheckAccountState = async () => {
         try {
             const data = await AuthService.checkAccountState(
