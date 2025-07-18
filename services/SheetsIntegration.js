@@ -59,4 +59,34 @@ export default class WorksheetService {
             throw err;
         }
     };
+
+    static async removeWorksheet(token, worksheetId) {
+        const url = `${BASE_URL}/worksheets/remove-worksheet`;
+        const payload = {
+            token: token,
+            id: worksheetId
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de remoção:', err);
+            throw err;
+        }
+    };
 }

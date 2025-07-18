@@ -28,6 +28,12 @@ export default function Wsmanagement() {
                         onPress={() => router.push(`/(tabs)/importworksheet?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
                         <Text style={styles.buttonText}>Importar Folha de Obra</Text>
                     </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/removeworksheet?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Remover Folha de Obra</Text>
+                    </Pressable>
                 </View>
             </ScrollView>
         </View>
