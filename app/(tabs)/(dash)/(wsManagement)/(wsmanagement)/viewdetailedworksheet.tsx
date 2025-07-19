@@ -1,6 +1,6 @@
 import BackButton from "@/app/utils/back_button";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {JSX, useState, useMemo} from "react";
+import React, {JSX, useState, useMemo, useEffect} from "react";
 import {Alert, Button, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, FlatList, Dimensions} from "react-native";
 import MapView, { Polygon, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import WorksheetService from "@/services/SheetsIntegration";
@@ -28,9 +28,12 @@ interface WorksheetMetadata {
 interface WorksheetFeature {
     rural_property_id: string;
     polygon_id: number;
-    UI_id: number;
+    ui_id: number;
     aigp: string;
-    coordinates: number[][][] | null;
+    geometry: {
+        type: string;
+        coordinates: number[][][]; // Coordenadas do polígono
+    } | null;
 }
 
 interface WorksheetOperation {
@@ -74,8 +77,21 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 token as string,
             );
 
-            console.log("Folha de obra detalhada mostrada.", data);
+            console.log("Folha de obra detalhada recebida:", JSON.stringify(data, null, 2));
             setWorksheetData(data);
+
+            // @ts-ignore
+            const hasValidCoordinates = data.features?.some(feature =>
+                feature.geometry &&
+                feature.geometry.coordinates &&
+                Array.isArray(feature.geometry.coordinates) &&
+                feature.geometry.coordinates.length > 0
+            );
+
+            if (hasValidCoordinates) {
+                setShowMap(true); // Mostrar mapa automaticamente se há coordenadas
+            }
+
             Alert.alert('Sucesso', 'Folha de obra carregada com sucesso!', [
                 { text: 'OK' },
             ]);
@@ -96,6 +112,48 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         }
     };
 
+    // Função para transformar coordenadas EPSG:3763 para WGS84 (se necessário)
+    const transformCoordinates = (coords: number[]): { latitude: number; longitude: number } | null => {
+        if (!coords || coords.length < 2) {
+            console.warn('Coordenadas inválidas:', coords);
+            return null;
+        }
+
+        const [x, y] = coords;
+
+        // Verificar se são números válidos
+        if (typeof x !== 'number' || typeof y !== 'number' || isNaN(x) || isNaN(y)) {
+            console.warn('Coordenadas não são números válidos:', coords);
+            return null;
+        }
+
+        // Se são coordenadas EPSG:3763 (valores típicos para Portugal Continental)
+        // Para simplificar, vamos assumir uma transformação aproximada
+        // Em produção, seria melhor usar uma biblioteca de transformação de coordenadas
+        if (Math.abs(x) > 1000 && Math.abs(y) > 1000) {
+            // Transformação aproximada EPSG:3763 para WGS84
+            // Esta é uma aproximação simplificada - use proj4 para maior precisão
+            const lon = -8.133108333333334 + (x / 111320.0);
+            const lat = 39.66825833333333 + (y / 110540.0);
+
+            // Validar se está dentro dos limites de Portugal
+            if (lon >= -10 && lon <= -6 && lat >= 36 && lat <= 42) {
+                return { latitude: lat, longitude: lon };
+            } else {
+                console.warn('Coordenadas transformadas fora dos limites de Portugal:', { lat, lon });
+                return null;
+            }
+        }
+
+        // Se já são coordenadas WGS84, validar se estão dentro dos limites de Portugal
+        if (x >= -10 && x <= -6 && y >= 36 && y <= 42) {
+            return { latitude: y, longitude: x };
+        }
+
+        console.warn('Coordenadas fora dos limites esperados para Portugal:', coords);
+        return null;
+    };
+
     // Gerar cores distintas para cada parcela
     const getPolygonColor = (index: number): string => {
         const colors = [
@@ -108,30 +166,84 @@ export default function ViewDetailedWorksheet(): JSX.Element {
 
     // Processar coordenadas para o mapa
     const mapPolygons: MapPolygon[] = useMemo(() => {
-        if (!worksheetData?.features) return [];
+        if (!worksheetData?.features) {
+            console.log('Sem features para processar');
+            return [];
+        }
 
-        return worksheetData.features
-            .filter(feature => feature.coordinates && feature.coordinates.length > 0)
-            .map((feature, index) => {
-                // Assumindo que as coordenadas estão no formato [[[lng, lat], [lng, lat], ...]]
-                const coords = feature.coordinates![0].map(coord => ({
-                    latitude: coord[1],
-                    longitude: coord[0]
-                }));
+        console.log('Processando features:', worksheetData.features.length);
 
-                return {
-                    coordinates: coords,
-                    polygon_id: feature.polygon_id,
-                    rural_property_id: feature.rural_property_id,
-                    color: getPolygonColor(index)
-                };
+        const validPolygons: MapPolygon[] = [];
+
+        worksheetData.features.forEach((feature, index) => {
+            console.log(`Processando feature ${index}:`, {
+                rural_property_id: feature.rural_property_id,
+                polygon_id: feature.polygon_id,
+                hasGeometry: !!feature.geometry,
+                hasCoordinates: !!(feature.geometry?.coordinates),
+                coordinatesLength: feature.geometry?.coordinates?.length
             });
+
+            if (!feature.geometry || !feature.geometry.coordinates || !Array.isArray(feature.geometry.coordinates)) {
+                console.warn(`Feature ${index} sem coordenadas válidas`);
+                return;
+            }
+
+            // Processar os anéis do polígono
+            const rings = feature.geometry.coordinates;
+            if (rings.length === 0) {
+                console.warn(`Feature ${index} sem anéis de coordenadas`);
+                return;
+            }
+
+            // Usar o primeiro anel (anel externo)
+            const outerRing = rings[0];
+            if (!Array.isArray(outerRing) || outerRing.length < 3) {
+                console.warn(`Feature ${index} com anel insuficiente:`, outerRing?.length);
+                return;
+            }
+
+            // Transformar coordenadas
+            const transformedCoords: { latitude: number; longitude: number }[] = [];
+
+            for (const coord of outerRing) {
+                const transformed = transformCoordinates(coord);
+                if (transformed) {
+                    transformedCoords.push(transformed);
+                }
+            }
+
+            if (transformedCoords.length < 3) {
+                console.warn(`Feature ${index} com poucas coordenadas válidas após transformação:`, transformedCoords.length);
+                return;
+            }
+
+            // Fechar o polígono se necessário
+            const firstPoint = transformedCoords[0];
+            const lastPoint = transformedCoords[transformedCoords.length - 1];
+            if (firstPoint.latitude !== lastPoint.latitude || firstPoint.longitude !== lastPoint.longitude) {
+                transformedCoords.push(firstPoint);
+            }
+
+            const polygon: MapPolygon = {
+                coordinates: transformedCoords,
+                polygon_id: feature.polygon_id,
+                rural_property_id: feature.rural_property_id,
+                color: getPolygonColor(index)
+            };
+
+            validPolygons.push(polygon);
+            console.log(`Feature ${index} processada com sucesso - ${transformedCoords.length} pontos`);
+        });
+
+        console.log(`Processamento concluído: ${validPolygons.length} polígonos válidos de ${worksheetData.features.length} features`);
+        return validPolygons;
     }, [worksheetData]);
 
     // Calcular região do mapa baseada nas coordenadas
     const mapRegion = useMemo(() => {
         if (mapPolygons.length === 0) {
-            // Região padrão (centro de Portugal)
+            console.log('Usando região padrão - centro de Portugal');
             return {
                 latitude: 39.5,
                 longitude: -8.0,
@@ -154,15 +266,18 @@ export default function ViewDetailedWorksheet(): JSX.Element {
             });
         });
 
-        const latDelta = Math.max(maxLat - minLat, 0.001) * 1.5;
-        const lngDelta = Math.max(maxLng - minLng, 0.001) * 1.5;
+        const latDelta = Math.max(maxLat - minLat, 0.01) * 1.5; // Padding mínimo
+        const lngDelta = Math.max(maxLng - minLng, 0.01) * 1.5;
 
-        return {
+        const region = {
             latitude: (minLat + maxLat) / 2,
             longitude: (minLng + maxLng) / 2,
             latitudeDelta: latDelta,
             longitudeDelta: lngDelta,
         };
+
+        console.log('Região calculada:', region);
+        return region;
     }, [mapPolygons]);
 
     const getStatusStyle = (status: string) => {
@@ -211,9 +326,9 @@ export default function ViewDetailedWorksheet(): JSX.Element {
             </View>
             <View style={styles.listItemContent}>
                 <Text style={styles.listItemDetail}>AIGP: {item.aigp}</Text>
-                <Text style={styles.listItemDetail}>UI ID: {item.UI_id}</Text>
+                <Text style={styles.listItemDetail}>UI ID: {item.ui_id}</Text>
                 <Text style={styles.listItemDetail}>
-                    Coordenadas: {item.coordinates ? 'Disponíveis' : 'Indisponíveis'}
+                    Coordenadas: {item.geometry?.coordinates ? 'Disponíveis' : 'Indisponíveis'}
                 </Text>
             </View>
         </View>
@@ -277,6 +392,9 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                             onPress={() => setShowMap(!showMap)}
                                             color="#10b981"
                                         />
+                                        <Text style={styles.mapInfo}>
+                                            {mapPolygons.length} parcela(s) com coordenadas disponíveis
+                                        </Text>
                                     </View>
                                 )}
 
@@ -289,22 +407,37 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                                 style={styles.map}
                                                 provider={PROVIDER_GOOGLE}
                                                 initialRegion={mapRegion}
+                                                region={mapRegion}
                                                 showsUserLocation={false}
                                                 showsMyLocationButton={false}
                                                 toolbarEnabled={false}
+                                                zoomEnabled={true}
+                                                scrollEnabled={true}
+                                                pitchEnabled={false}
+                                                rotateEnabled={false}
                                             >
                                                 {mapPolygons.map((polygon, index) => (
                                                     <Polygon
-                                                        key={`${polygon.rural_property_id}_${polygon.polygon_id}`}
+                                                        key={`polygon_${polygon.rural_property_id}_${polygon.polygon_id}`}
                                                         coordinates={polygon.coordinates}
                                                         fillColor={`${polygon.color}40`} // 40 = 25% opacity
                                                         strokeColor={polygon.color}
                                                         strokeWidth={2}
+                                                        tappable={true}
+                                                        onPress={() => {
+                                                            Alert.alert(
+                                                                `Parcela ${polygon.polygon_id}`,
+                                                                `Propriedade: ${polygon.rural_property_id}\nCor: ${polygon.color}`,
+                                                                [{ text: 'OK' }]
+                                                            );
+                                                        }}
                                                     />
                                                 ))}
 
                                                 {/* Markers for polygon centers */}
                                                 {mapPolygons.map((polygon, index) => {
+                                                    if (polygon.coordinates.length === 0) return null;
+
                                                     const centerLat = polygon.coordinates.reduce((sum, coord) => sum + coord.latitude, 0) / polygon.coordinates.length;
                                                     const centerLng = polygon.coordinates.reduce((sum, coord) => sum + coord.longitude, 0) / polygon.coordinates.length;
 
@@ -327,15 +460,26 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                         {/* Map Legend */}
                                         <View style={styles.mapLegend}>
                                             <Text style={styles.legendTitle}>Legenda:</Text>
-                                            {mapPolygons.map((polygon, index) => (
-                                                <View key={`legend_${index}`} style={styles.legendItem}>
-                                                    <View style={[styles.legendColor, { backgroundColor: polygon.color }]} />
-                                                    <Text style={styles.legendText}>
-                                                        Parcela {polygon.polygon_id} - {polygon.rural_property_id}
-                                                    </Text>
-                                                </View>
-                                            ))}
+                                            <ScrollView style={styles.legendScroll} nestedScrollEnabled={true}>
+                                                {mapPolygons.map((polygon, index) => (
+                                                    <View key={`legend_${index}`} style={styles.legendItem}>
+                                                        <View style={[styles.legendColor, { backgroundColor: polygon.color }]} />
+                                                        <Text style={styles.legendText}>
+                                                            Parcela {polygon.polygon_id} - {polygon.rural_property_id}
+                                                        </Text>
+                                                    </View>
+                                                ))}
+                                            </ScrollView>
                                         </View>
+                                    </View>
+                                )}
+
+                                {/* Informação se não há coordenadas */}
+                                {mapPolygons.length === 0 && worksheetData.features.length > 0 && (
+                                    <View style={styles.noMapContainer}>
+                                        <Text style={styles.noMapText}>
+                                            Esta folha de obra não possui coordenadas válidas para exibição no mapa.
+                                        </Text>
                                     </View>
                                 )}
 
@@ -546,8 +690,15 @@ const styles = StyleSheet.create({
     mapToggleContainer: {
         marginBottom: 20,
     },
+    mapInfo: {
+        fontSize: 14,
+        color: '#64748b',
+        textAlign: 'center',
+        marginTop: 8,
+        fontStyle: 'italic',
+    },
     mapContainer: {
-        height: 300,
+        height: 400, // Aumentei a altura para melhor visualização
         borderRadius: 12,
         overflow: 'hidden',
         marginBottom: 16,
@@ -563,12 +714,16 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#e2e8f0',
+        maxHeight: 200, // Limitar altura da legenda
     },
     legendTitle: {
         fontSize: 16,
         fontWeight: '600',
         color: '#1e293b',
         marginBottom: 12,
+    },
+    legendScroll: {
+        maxHeight: 120,
     },
     legendItem: {
         flexDirection: 'row',
@@ -587,6 +742,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#64748b',
         flex: 1,
+    },
+    noMapContainer: {
+        backgroundColor: '#fef3c7',
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#fbbf24',
+    },
+    noMapText: {
+        fontSize: 14,
+        color: '#92400e',
+        textAlign: 'center',
+        fontStyle: 'italic',
     },
     grid: {
         flexDirection: 'row',
