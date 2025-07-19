@@ -2,9 +2,9 @@ import BackButton from "@/app/utils/back_button";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import LogoutModal from "../../../utils/LogoutModal";
+import LogoutModal from "../../../../utils/LogoutModal";
 
-export default function Wsmanagement() {
+export default function Executionwsmanagement() {
     const router = useRouter();
     const { token, username, role } = useLocalSearchParams();
 
@@ -18,33 +18,17 @@ export default function Wsmanagement() {
                 role={role?.toString()}
             />
 
-            <Text style={styles.title}>Gestão de Folhas de Obra</Text>
+            <Text style={styles.title}>Gestão de Folhas de Execução</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.buttonsContainer}>
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/(tabs)/importworksheet?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
-                        <Text style={styles.buttonText}>Importar Folha de Obra</Text>
+                        onPress={() => router.push(`/createexecutionsheetmanagement?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
+                        <Text style={styles.buttonText}>Criar Folha de Execução</Text>
                     </Pressable>
 
-                    <Pressable
-                        style={styles.button}
-                        onPress={() => router.push(`/viewgenericworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Visualização genérica de uma Folha de Obra</Text>
-                    </Pressable>
 
-                    <Pressable
-                        style={styles.button}
-                        onPress={() => router.push(`/viewdetailedworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Visualização detalhada de uma Folha de Obra</Text>
-                    </Pressable>
-
-                    <Pressable
-                        style={styles.button}
-                        onPress={() => router.push(`/removeworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Remover Folha de Obra</Text>
-                    </Pressable>
 
                 </View>
             </ScrollView>

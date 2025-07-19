@@ -39,6 +39,12 @@ export default function Dashboard() {
                             <Text style={styles.mainTitle}>Gestão de Worksheets</Text>
                             <Text style={styles.mainDesc}>Aqui pode importar, ver e gerir folhas de obra</Text>
                         </Pressable>
+
+                         <Pressable style={styles.mainCard} onPress={() => router.push(`/executionwsmanagement?token=${token}&username=${username}&role=${role}`)}>
+                            <Text style={styles.mainIcon}>💻</Text>
+                            <Text style={styles.mainTitle}>Gestão de Execution Worksheets</Text>
+                            <Text style={styles.mainDesc}>Aqui pode realizar operações referentes a folhas de execução</Text>
+                         </Pressable>
                 </View>
             </View>
     </ScrollView>
