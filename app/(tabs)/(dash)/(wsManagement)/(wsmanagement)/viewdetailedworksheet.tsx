@@ -133,8 +133,8 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                             }));
                     }
                     // Check if it's direct array format [[lng, lat], [lng, lat], ...]
-                    else if (Array.isArray(feature.coordinates[0]) && typeof feature.coordinates[0][0] === 'number') {
-                        const directCoords = feature.coordinates as number[][];
+                    else if (Array.isArray(feature.coordinates[0]) && typeof (feature.coordinates[0] as number[])[0] === 'number') {
+                        const directCoords = feature.coordinates as unknown as number[][];
                         coords = directCoords
                             .filter((coord): coord is [number, number] => 
                                 Array.isArray(coord) && 
