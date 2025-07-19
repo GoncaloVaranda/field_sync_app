@@ -12,12 +12,11 @@ export default function Wsmanagement() {
         <View style={styles.container}>
             <BackButton/>
 
-
             <LogoutModal
                 username={username.toString()}
                 token={token.toString()}
                 role={role?.toString()}
-            />  
+            />
 
             <Text style={styles.title}>Gestão de Folhas de Obra</Text>
 
@@ -31,14 +30,20 @@ export default function Wsmanagement() {
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/removeworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Remover Folha de Obra</Text>
+                        onPress={() => router.push(`/viewgenericworksheet?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Visualização genérica de uma Folha de Obra</Text>
                     </Pressable>
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/viewgenericworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Visualização genérica de uma Folha de Obra</Text>
+                        onPress={() => router.push(`/viewdetailedworksheet?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Visualização detalhada de uma Folha de Obra</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/removeworksheet?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Remover Folha de Obra</Text>
                     </Pressable>
 
                 </View>
