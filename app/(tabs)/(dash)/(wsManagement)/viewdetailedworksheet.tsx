@@ -1,8 +1,11 @@
 import BackButton from "@/app/utils/back_button";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {JSX, useState} from "react";
-import {Alert, Button, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, FlatList} from "react-native";
+import React, {JSX, useState, useMemo} from "react";
+import {Alert, Button, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, FlatList, Dimensions} from "react-native";
+import MapView, { Polygon, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import WorksheetService from "@/services/SheetsIntegration";
+
+const { width, height } = Dimensions.get('window');
 
 interface WorksheetMetadata {
     id: number;
@@ -43,12 +46,20 @@ interface DetailedWorksheetData {
     operations: WorksheetOperation[];
 }
 
+interface MapPolygon {
+    coordinates: { latitude: number; longitude: number }[];
+    polygon_id: number;
+    rural_property_id: string;
+    color: string;
+}
+
 export default function ViewDetailedWorksheet(): JSX.Element {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [worksheetId, setWorksheetId] = useState<string>("");
     const [worksheetData, setWorksheetData] = useState<DetailedWorksheetData | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [showMap, setShowMap] = useState<boolean>(false);
 
     const HandleViewDetailedWorksheet = async (): Promise<void> => {
         if (!worksheetId.trim()) {
@@ -85,6 +96,75 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         }
     };
 
+    // Gerar cores distintas para cada parcela
+    const getPolygonColor = (index: number): string => {
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+            '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7DBDD'
+        ];
+        return colors[index % colors.length];
+    };
+
+    // Processar coordenadas para o mapa
+    const mapPolygons: MapPolygon[] = useMemo(() => {
+        if (!worksheetData?.features) return [];
+
+        return worksheetData.features
+            .filter(feature => feature.coordinates && feature.coordinates.length > 0)
+            .map((feature, index) => {
+                // Assumindo que as coordenadas estão no formato [[[lng, lat], [lng, lat], ...]]
+                const coords = feature.coordinates![0].map(coord => ({
+                    latitude: coord[1],
+                    longitude: coord[0]
+                }));
+
+                return {
+                    coordinates: coords,
+                    polygon_id: feature.polygon_id,
+                    rural_property_id: feature.rural_property_id,
+                    color: getPolygonColor(index)
+                };
+            });
+    }, [worksheetData]);
+
+    // Calcular região do mapa baseada nas coordenadas
+    const mapRegion = useMemo(() => {
+        if (mapPolygons.length === 0) {
+            // Região padrão (centro de Portugal)
+            return {
+                latitude: 39.5,
+                longitude: -8.0,
+                latitudeDelta: 1.0,
+                longitudeDelta: 1.0,
+            };
+        }
+
+        let minLat = Infinity;
+        let maxLat = -Infinity;
+        let minLng = Infinity;
+        let maxLng = -Infinity;
+
+        mapPolygons.forEach(polygon => {
+            polygon.coordinates.forEach(coord => {
+                minLat = Math.min(minLat, coord.latitude);
+                maxLat = Math.max(maxLat, coord.latitude);
+                minLng = Math.min(minLng, coord.longitude);
+                maxLng = Math.max(maxLng, coord.longitude);
+            });
+        });
+
+        const latDelta = Math.max(maxLat - minLat, 0.001) * 1.5;
+        const lngDelta = Math.max(maxLng - minLng, 0.001) * 1.5;
+
+        return {
+            latitude: (minLat + maxLat) / 2,
+            longitude: (minLng + maxLng) / 2,
+            latitudeDelta: latDelta,
+            longitudeDelta: lngDelta,
+        };
+    }, [mapPolygons]);
+
     const getStatusStyle = (status: string) => {
         switch (status.toUpperCase()) {
             case 'IMPORTED':
@@ -118,11 +198,16 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         }
     };
 
-    const renderFeatureItem = ({ item }: { item: WorksheetFeature }): JSX.Element => (
+    const renderFeatureItem = ({ item, index }: { item: WorksheetFeature; index: number }): JSX.Element => (
         <View style={styles.listItem}>
             <View style={styles.listItemHeader}>
-                <Text style={styles.listItemTitle}>Parcela {item.polygon_id}</Text>
-                <Text style={styles.listItemSubtitle}>Propriedade: {item.rural_property_id}</Text>
+                <View style={styles.featureHeaderLeft}>
+                    <View style={[styles.colorIndicator, { backgroundColor: getPolygonColor(index) }]} />
+                    <View>
+                        <Text style={styles.listItemTitle}>Parcela {item.polygon_id}</Text>
+                        <Text style={styles.listItemSubtitle}>Propriedade: {item.rural_property_id}</Text>
+                    </View>
+                </View>
             </View>
             <View style={styles.listItemContent}>
                 <Text style={styles.listItemDetail}>AIGP: {item.aigp}</Text>
@@ -183,6 +268,76 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                 <Text style={styles.sectionTitle}>
                                     Folha de Obra #{worksheetData.metadata.id}
                                 </Text>
+
+                                {/* Map Toggle Button */}
+                                {mapPolygons.length > 0 && (
+                                    <View style={styles.mapToggleContainer}>
+                                        <Button
+                                            title={showMap ? "Ocultar Mapa" : "Ver Mapa das Parcelas"}
+                                            onPress={() => setShowMap(!showMap)}
+                                            color="#10b981"
+                                        />
+                                    </View>
+                                )}
+
+                                {/* Map Section */}
+                                {showMap && mapPolygons.length > 0 && (
+                                    <View style={styles.section}>
+                                        <Text style={styles.subsectionTitle}>Mapa das Parcelas</Text>
+                                        <View style={styles.mapContainer}>
+                                            <MapView
+                                                style={styles.map}
+                                                provider={PROVIDER_GOOGLE}
+                                                initialRegion={mapRegion}
+                                                showsUserLocation={false}
+                                                showsMyLocationButton={false}
+                                                toolbarEnabled={false}
+                                            >
+                                                {mapPolygons.map((polygon, index) => (
+                                                    <Polygon
+                                                        key={`${polygon.rural_property_id}_${polygon.polygon_id}`}
+                                                        coordinates={polygon.coordinates}
+                                                        fillColor={`${polygon.color}40`} // 40 = 25% opacity
+                                                        strokeColor={polygon.color}
+                                                        strokeWidth={2}
+                                                    />
+                                                ))}
+
+                                                {/* Markers for polygon centers */}
+                                                {mapPolygons.map((polygon, index) => {
+                                                    const centerLat = polygon.coordinates.reduce((sum, coord) => sum + coord.latitude, 0) / polygon.coordinates.length;
+                                                    const centerLng = polygon.coordinates.reduce((sum, coord) => sum + coord.longitude, 0) / polygon.coordinates.length;
+
+                                                    return (
+                                                        <Marker
+                                                            key={`marker_${polygon.rural_property_id}_${polygon.polygon_id}`}
+                                                            coordinate={{
+                                                                latitude: centerLat,
+                                                                longitude: centerLng
+                                                            }}
+                                                            title={`Parcela ${polygon.polygon_id}`}
+                                                            description={`Propriedade: ${polygon.rural_property_id}`}
+                                                            pinColor={polygon.color}
+                                                        />
+                                                    );
+                                                })}
+                                            </MapView>
+                                        </View>
+
+                                        {/* Map Legend */}
+                                        <View style={styles.mapLegend}>
+                                            <Text style={styles.legendTitle}>Legenda:</Text>
+                                            {mapPolygons.map((polygon, index) => (
+                                                <View key={`legend_${index}`} style={styles.legendItem}>
+                                                    <View style={[styles.legendColor, { backgroundColor: polygon.color }]} />
+                                                    <Text style={styles.legendText}>
+                                                        Parcela {polygon.polygon_id} - {polygon.rural_property_id}
+                                                    </Text>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    </View>
+                                )}
 
                                 {/* Metadata Section */}
                                 <View style={styles.section}>
@@ -388,6 +543,51 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#e2e8f0',
     },
+    mapToggleContainer: {
+        marginBottom: 20,
+    },
+    mapContainer: {
+        height: 300,
+        borderRadius: 12,
+        overflow: 'hidden',
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
+    map: {
+        flex: 1,
+    },
+    mapLegend: {
+        backgroundColor: '#f8fafc',
+        padding: 16,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
+    legendTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#1e293b',
+        marginBottom: 12,
+    },
+    legendItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    legendColor: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        marginRight: 12,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
+    legendText: {
+        fontSize: 14,
+        color: '#64748b',
+        flex: 1,
+    },
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -441,6 +641,20 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 8,
     },
+    featureHeaderLeft: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        flex: 1,
+    },
+    colorIndicator: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        marginRight: 12,
+        marginTop: 4,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
     listItemTitle: {
         fontSize: 16,
         fontWeight: '600',
@@ -454,6 +668,7 @@ const styles = StyleSheet.create({
     },
     listItemContent: {
         gap: 4,
+        marginLeft: 24, // Align with the text next to color indicator
     },
     listItemDetail: {
         fontSize: 14,
