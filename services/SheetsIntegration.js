@@ -79,11 +79,11 @@ export default class WorksheetService {
         }
     };
 
-    static async viewGeneralWorksheet(token, worksheetId) {
+    static async viewGeneralWorksheet(worksheetId, token) {
         const url = `${BASE_URL}/worksheet/view-general-worksheet`;
         const payload = {
-            token: token,
-            id: worksheetId
+            id: worksheetId,
+            token: token
         };
 
         try {
