@@ -113,40 +113,47 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         return worksheetData.features
             .filter(feature => feature.coordinates && feature.coordinates.length > 0)
             .map((feature, index) => {
-                // Handle different coordinate formats
-                let coords;
+                // Handle different coordinate formats and ensure proper typing
+                let coords: { latitude: number; longitude: number }[] = [];
+                
                 if (Array.isArray(feature.coordinates) && feature.coordinates.length > 0) {
                     // Check if it's nested array format [[[lng, lat], [lng, lat], ...]]
                     if (Array.isArray(feature.coordinates[0]) && Array.isArray(feature.coordinates[0][0])) {
-                        coords = feature.coordinates[0].map(coord => ({
-                            latitude: coord[1],
-                            longitude: coord[0]
-                        }));
+                        coords = feature.coordinates[0]
+                            .filter((coord): coord is [number, number] => 
+                                Array.isArray(coord) && 
+                                coord.length === 2 && 
+                                typeof coord[0] === 'number' && 
+                                typeof coord[1] === 'number'
+                            )
+                            .map(coord => ({
+                                latitude: coord[1],
+                                longitude: coord[0]
+                            }));
                     }
                     // Check if it's direct array format [[lng, lat], [lng, lat], ...]
                     else if (Array.isArray(feature.coordinates[0]) && typeof feature.coordinates[0][0] === 'number') {
-                        coords = feature.coordinates.map(coord => ({
-                            latitude: coord[1],
-                            longitude: coord[0]
-                        }));
+                        coords = feature.coordinates
+                            .filter((coord): coord is [number, number] => 
+                                Array.isArray(coord) && 
+                                coord.length === 2 && 
+                                typeof coord[0] === 'number' && 
+                                typeof coord[1] === 'number'
+                            )
+                            .map(coord => ({
+                                latitude: coord[1],
+                                longitude: coord[0]
+                            }));
                     }
-                    // If coordinates are invalid, skip this feature
-                    else {
-                        console.warn('Invalid coordinate format for feature:', feature);
-                        return null;
-                    }
-                } else {
-                    console.warn('No valid coordinates found for feature:', feature);
+                }
+                
+                // If no valid coordinates were processed, log warning and return null
+                if (coords.length === 0) {
+                    console.warn('No valid coordinates processed for feature:', feature);
                     return null;
                 }
 
-                // Validate coordinates
-                if (!coords || coords.length < 3) {
-                    console.warn('Insufficient coordinates for polygon:', feature);
-                    return null;
-                }
-
-                // Validate coordinate values
+                // Validate coordinates are within proper ranges
                 const validCoords = coords.filter(coord => 
                     typeof coord.latitude === 'number' && 
                     typeof coord.longitude === 'number' &&
@@ -157,7 +164,7 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 );
 
                 if (validCoords.length < 3) {
-                    console.warn('Not enough valid coordinates for polygon:', feature);
+                    console.warn('Not enough valid coordinates for polygon (need at least 3):', feature);
                     return null;
                 }
 
@@ -168,7 +175,8 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                     color: getPolygonColor(index)
                 };
             })
-            .filter(polygon => polygon !== null); // Remove null entries
+            .filter((polygon): polygon is MapPolygon => polygon !== null);
+    }, [worksheetData]);@@ .. @@
     }, [worksheetData]);
 
     // Calcular região do mapa baseada nas coordenadas
