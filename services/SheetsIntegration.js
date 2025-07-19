@@ -238,4 +238,249 @@ export default class WorksheetService {
             throw err;
         }
     };
+
+    static async startActivity(token, startActivityData) {
+        const url = `${BASE_URL}/execution-sheet/start-activity`;
+
+        const payload = {
+            token,
+            operationId: startActivityData.operationId,
+            ruralPropertyId: startActivityData.ruralPropertyId,
+            polygonId: startActivityData.polygonId,
+            worksheetId: startActivityData.worksheetId,
+            startDate: startActivityData.startDate
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de início de atividade:', err);
+            throw err;
+        }
+    };
+
+    static async endActivity(token, endActivityData) {
+        const url = `${BASE_URL}/execution-sheet/end-activity`;
+
+        const payload = {
+            token,
+            operationId: endActivityData.operationId,
+            ruralPropertyId: endActivityData.ruralPropertyId,
+            polygonId: endActivityData.polygonId,
+            worksheetId: endActivityData.worksheetId,
+            activityId: endActivityData.activityId,
+            endDate: endActivityData.endDate,
+            finalActivity: endActivityData.finalActivity || false
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de término de atividade:', err);
+            throw err;
+        }
+    };
+
+
+    static async viewOperationStatus(token, viewOperationData) {
+        const url = `${BASE_URL}/execution-sheet/view-operation-status`;
+
+        const payload = {
+            token,
+            operationId: viewOperationData.operationId,
+            ruralPropertyId: viewOperationData.ruralPropertyId,
+            polygonId: viewOperationData.polygonId,
+            worksheetId: viewOperationData.worksheetId
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de visualização de status:', err);
+            throw err;
+        }
+    };
+
+    static async addActivityInfo(token, activityInfoData) {
+        const url = `${BASE_URL}/execution-sheet/add-activity-info`;
+
+        const payload = {
+            token,
+            operationId: activityInfoData.operationId,
+            ruralPropertyId: activityInfoData.ruralPropertyId,
+            polygonId: activityInfoData.polygonId,
+            worksheetId: activityInfoData.worksheetId,
+            activityId: activityInfoData.activityId,
+            notes: activityInfoData.notes || "",
+            gpsTrack: activityInfoData.gpsTrack || "",
+            photos: activityInfoData.photos || []
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao adicionar informações à atividade:', err);
+            throw err;
+        }
+    };
+
+    static async viewOperationStatusGlobal(token, viewOperationGlobalData) {
+        const url = `${BASE_URL}/execution-sheet/view-status-op-global-fe`;
+
+        const payload = {
+            token,
+            worksheetId: viewOperationGlobalData.worksheetId,
+            operationId: viewOperationGlobalData.operationId
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao obter status global da operação:', err);
+            throw err;
+        }
+    };
+
+    static async editOperation(token, editOperationData) {
+        const url = `${BASE_URL}/execution-sheet/edit-operation`;
+
+        const payload = {
+            token,
+            worksheetId: editOperationData.worksheetId,
+            operationId: editOperationData.operationId,
+            ruralPropertyId: editOperationData.ruralPropertyId,
+            polygonId: editOperationData.polygonId,
+            estimatedCompletionDate: editOperationData.estimatedCompletionDate || "",
+            estimatedDuration: editOperationData.estimatedDuration || "",
+            notes: editOperationData.notes || ""
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao editar a operação:', err);
+            throw err;
+        }
+    };
+
+    static async exportExecutionSheet(token, worksheetId) {
+        const url = `${BASE_URL}/execution-sheet/export-execution-sheet`;
+
+        const payload = {
+            token,
+            worksheetId
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao exportar a folha de execução:', err);
+            throw err;
+        }
+    };
 }
