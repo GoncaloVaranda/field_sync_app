@@ -176,7 +176,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 };
             })
             .filter((polygon): polygon is MapPolygon => polygon !== null);
-    }, [worksheetData]);@@ .. @@
     }, [worksheetData]);
 
     // Calcular região do mapa baseada nas coordenadas
