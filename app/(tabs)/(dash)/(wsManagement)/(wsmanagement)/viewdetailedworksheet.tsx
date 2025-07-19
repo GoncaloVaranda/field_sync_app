@@ -119,7 +119,8 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 if (Array.isArray(feature.coordinates) && feature.coordinates.length > 0) {
                     // Check if it's nested array format [[[lng, lat], [lng, lat], ...]]
                     if (Array.isArray(feature.coordinates[0]) && Array.isArray(feature.coordinates[0][0])) {
-                        coords = feature.coordinates[0]
+                        const firstRing = feature.coordinates[0] as number[][];
+                        coords = firstRing
                             .filter((coord): coord is [number, number] => 
                                 Array.isArray(coord) && 
                                 coord.length === 2 && 
@@ -133,7 +134,8 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                     }
                     // Check if it's direct array format [[lng, lat], [lng, lat], ...]
                     else if (Array.isArray(feature.coordinates[0]) && typeof feature.coordinates[0][0] === 'number') {
-                        coords = feature.coordinates
+                        const directCoords = feature.coordinates as number[][];
+                        coords = directCoords
                             .filter((coord): coord is [number, number] => 
                                 Array.isArray(coord) && 
                                 coord.length === 2 && 
