@@ -34,6 +34,11 @@ export default function Executionwsmanagement() {
                         <Text style={styles.buttonText}>Atribuir operações</Text>
                     </Pressable>
 
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/startactivity?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
+                        <Text style={styles.buttonText}>Começar atividade</Text>
+                    </Pressable>
 
 
                 </View>
