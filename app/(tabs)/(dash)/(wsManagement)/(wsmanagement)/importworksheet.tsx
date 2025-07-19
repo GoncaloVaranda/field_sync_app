@@ -1,5 +1,4 @@
 import BackButton from "@/app/utils/back_button";
-import AuthService from "@/services/UsersIntegration";
 import * as DocumentPicker from 'expo-document-picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";

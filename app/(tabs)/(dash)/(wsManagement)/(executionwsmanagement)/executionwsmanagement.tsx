@@ -24,8 +24,14 @@ export default function Executionwsmanagement() {
                 <View style={styles.buttonsContainer}>
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/createexecutionsheetmanagement?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
+                        onPress={() => router.push(`/createexecutionsheet?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
                         <Text style={styles.buttonText}>Criar Folha de Execução</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/assignoperations?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
+                        <Text style={styles.buttonText}>Atribuir operações</Text>
                     </Pressable>
 
 
