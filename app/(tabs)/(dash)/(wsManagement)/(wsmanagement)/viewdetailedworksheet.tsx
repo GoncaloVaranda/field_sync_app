@@ -113,71 +113,19 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         return worksheetData.features
             .filter(feature => feature.coordinates && feature.coordinates.length > 0)
             .map((feature, index) => {
-                // Handle different coordinate formats and ensure proper typing
-                let coords: { latitude: number; longitude: number }[] = [];
-                
-                if (Array.isArray(feature.coordinates) && feature.coordinates.length > 0) {
-                    // Check if it's nested array format [[[lng, lat], [lng, lat], ...]]
-                    if (Array.isArray(feature.coordinates[0]) && Array.isArray(feature.coordinates[0][0])) {
-                        const firstRing = feature.coordinates[0] as number[][];
-                        coords = firstRing
-                            .filter((coord): coord is [number, number] => 
-                                Array.isArray(coord) && 
-                                coord.length === 2 && 
-                                typeof coord[0] === 'number' && 
-                                typeof coord[1] === 'number'
-                            )
-                            .map(coord => ({
-                                latitude: coord[1],
-                                longitude: coord[0]
-                            }));
-                    }
-                    // Check if it's direct array format [[lng, lat], [lng, lat], ...]
-                    else if (Array.isArray(feature.coordinates[0]) && typeof feature.coordinates[0][0] === 'number') {
-                        const directCoords = feature.coordinates as number[][];
-                        coords = directCoords
-                            .filter((coord): coord is [number, number] => 
-                                Array.isArray(coord) && 
-                                coord.length === 2 && 
-                                typeof coord[0] === 'number' && 
-                                typeof coord[1] === 'number'
-                            )
-                            .map(coord => ({
-                                latitude: coord[1],
-                                longitude: coord[0]
-                            }));
-                    }
-                }
-                
-                // If no valid coordinates were processed, log warning and return null
-                if (coords.length === 0) {
-                    console.warn('No valid coordinates processed for feature:', feature);
-                    return null;
-                }
-
-                // Validate coordinates are within proper ranges
-                const validCoords = coords.filter(coord => 
-                    typeof coord.latitude === 'number' && 
-                    typeof coord.longitude === 'number' &&
-                    !isNaN(coord.latitude) && 
-                    !isNaN(coord.longitude) &&
-                    coord.latitude >= -90 && coord.latitude <= 90 &&
-                    coord.longitude >= -180 && coord.longitude <= 180
-                );
-
-                if (validCoords.length < 3) {
-                    console.warn('Not enough valid coordinates for polygon (need at least 3):', feature);
-                    return null;
-                }
+                // Assumindo que as coordenadas estão no formato [[[lng, lat], [lng, lat], ...]]
+                const coords = feature.coordinates![0].map(coord => ({
+                    latitude: coord[1],
+                    longitude: coord[0]
+                }));
 
                 return {
-                    coordinates: validCoords,
+                    coordinates: coords,
                     polygon_id: feature.polygon_id,
                     rural_property_id: feature.rural_property_id,
                     color: getPolygonColor(index)
                 };
-            })
-            .filter((polygon): polygon is MapPolygon => polygon !== null);
+            });
     }, [worksheetData]);
 
     // Calcular região do mapa baseada nas coordenadas
@@ -341,11 +289,9 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                                 style={styles.map}
                                                 provider={PROVIDER_GOOGLE}
                                                 initialRegion={mapRegion}
-                                                region={mapRegion}
                                                 showsUserLocation={false}
                                                 showsMyLocationButton={false}
                                                 toolbarEnabled={false}
-                                                mapType="hybrid"
                                             >
                                                 {mapPolygons.map((polygon, index) => (
                                                     <Polygon
@@ -354,13 +300,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                                         fillColor={`${polygon.color}40`} // 40 = 25% opacity
                                                         strokeColor={polygon.color}
                                                         strokeWidth={2}
-                                                        tappable={true}
-                                                        onPress={() => {
-                                                            Alert.alert(
-                                                                `Parcela ${polygon.polygon_id}`,
-                                                                `Propriedade: ${polygon.rural_property_id}\nCoordenadas: ${polygon.coordinates.length} pontos`
-                                                            );
-                                                        }}
                                                     />
                                                 ))}
 
@@ -388,15 +327,11 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                         {/* Map Legend */}
                                         <View style={styles.mapLegend}>
                                             <Text style={styles.legendTitle}>Legenda:</Text>
-                                            <Text style={styles.legendSubtitle}>
-                                                {mapPolygons.length} parcela(s) encontrada(s)
-                                            </Text>
                                             {mapPolygons.map((polygon, index) => (
                                                 <View key={`legend_${index}`} style={styles.legendItem}>
                                                     <View style={[styles.legendColor, { backgroundColor: polygon.color }]} />
                                                     <Text style={styles.legendText}>
                                                         Parcela {polygon.polygon_id} - {polygon.rural_property_id}
-                                                        ({polygon.coordinates.length} pontos)
                                                     </Text>
                                                 </View>
                                             ))}
@@ -634,12 +569,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#1e293b',
         marginBottom: 12,
-    },
-    legendSubtitle: {
-        fontSize: 14,
-        color: '#64748b',
-        marginBottom: 8,
-        fontStyle: 'italic',
     },
     legendItem: {
         flexDirection: 'row',

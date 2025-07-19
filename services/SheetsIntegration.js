@@ -199,4 +199,43 @@ export default class WorksheetService {
             throw err;
         }
     };
+
+    static async assignOperations(token, assignOperationsData){
+        const url = `${BASE_URL}/execution-sheet/assign-operations`;
+
+        const processedAssignments = assignOperationsData.assignments.map(assignment => ({
+            operationCode: assignment.operationCode || '',
+            ruralPropertyId: assignment.ruralPropertyId || '',
+            polygonId: assignment.polygonId || 0,
+            operatorUsername: assignment.operatorUsername || ''
+        }));
+
+        const payload = {
+            token,
+            id: assignOperationsData.id,
+            assignments: processedAssignments
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de importação:', err);
+            throw err;
+        }
+    };
 }
