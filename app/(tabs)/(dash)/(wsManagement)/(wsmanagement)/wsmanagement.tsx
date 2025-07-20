@@ -49,7 +49,7 @@ export default function Wsmanagement() {
                     <Pressable
                         style={styles.button}
                         onPress={() => router.push(`/scheduleworksheet?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Remover Folha de Obra</Text>
+                        <Text style={styles.buttonText}>Agendar Folha de Obra</Text>
                     </Pressable>
 
                 </View>

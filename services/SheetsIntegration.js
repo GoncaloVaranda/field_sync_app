@@ -483,14 +483,12 @@ export default class WorksheetService {
         }
     };
 
-    // Adicione este método ao seu WorksheetService
-
-    static async scheduleWorksheet(token, worksheetId) {
+    static async scheduleWorksheet(id, token) {
         const url = `${BASE_URL}/worksheet/scheduling-worksheets`;
 
         const payload = {
+            id,
             token,
-            id: worksheetId
         };
 
         try {
@@ -505,20 +503,13 @@ export default class WorksheetService {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                let errorMessage;
-                try {
-                    const errorJson = JSON.parse(errorText);
-                    errorMessage = errorJson.message || errorText;
-                } catch {
-                    errorMessage = errorText;
-                }
-                throw new Error(`Erro no servidor (${response.status}): ${errorMessage}`);
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
             }
 
             return await response.json();
 
         } catch (err) {
-            console.error('Falha na requisição de agendamento:', err);
+            console.error('Falha ao editar a operação:', err);
             throw err;
         }
     };

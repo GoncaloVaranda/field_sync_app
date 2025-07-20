@@ -16,7 +16,6 @@ export default function ScheduleWorksheet() {
     const orb2Animation = new Animated.Value(0);
 
     React.useEffect(() => {
-        // Start floating animations
         const animateOrb = (animatedValue: Animated.Value, delay: number) => {
             Animated.loop(
                 Animated.sequence([
@@ -62,10 +61,7 @@ export default function ScheduleWorksheet() {
             console.log('📅 Agendando folha de obra...');
             console.log('- Worksheet ID:', numericId);
 
-            const scheduleData = await WorksheetService.scheduleWorksheet(
-                token as string,
-                numericId
-            );
+            const scheduleData = await WorksheetService.scheduleWorksheet(numericId, token);
 
             console.log('✅ Folha agendada com sucesso:', scheduleData);
 
