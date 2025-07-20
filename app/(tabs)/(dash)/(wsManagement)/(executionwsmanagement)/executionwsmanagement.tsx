@@ -52,8 +52,17 @@ export default function Executionwsmanagement() {
                         <Text style={styles.buttonText}>Ver estado global de uma operação</Text>
                     </Pressable>
 
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/editoperation?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Editar operação</Text>
+                    </Pressable>
 
-
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/exportexecutionsheet?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Exportar folha de execução</Text>
+                    </Pressable>
 
                 </View>
             </ScrollView>

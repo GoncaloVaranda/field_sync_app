@@ -274,18 +274,18 @@ export default class WorksheetService {
         }
     };
 
-    static async endActivity(token, endActivityData) {
+    static async endActivity(token, operationId, ruralPropertyId, polygonId, worksheetId, activityId, endDate, finalActivity) {
         const url = `${BASE_URL}/execution-sheet/end-activity`;
 
         const payload = {
             token,
-            operationId: endActivityData.operationId,
-            ruralPropertyId: endActivityData.ruralPropertyId,
-            polygonId: endActivityData.polygonId,
-            worksheetId: endActivityData.worksheetId,
-            activityId: endActivityData.activityId,
-            endDate: endActivityData.endDate,
-            finalActivity: endActivityData.finalActivity || false
+            operationId,
+            ruralPropertyId,
+            polygonId,
+            worksheetId,
+            activityId,
+            endDate,
+            finalActivity
         };
 
         try {
@@ -310,7 +310,6 @@ export default class WorksheetService {
             throw err;
         }
     };
-
 
     static async viewOperationStatus(token, operationId, ruralPropertyId, polygonId, worksheetId) {
         const url = `${BASE_URL}/execution-sheet/view-operation-status`;
@@ -346,19 +345,19 @@ export default class WorksheetService {
         }
     };
 
-    static async addActivityInfo(token, activityInfoData) {
+    static async addActivityInfo(token, operationId, ruralPropertyId, polygonId, worksheetId,activityId, notes, gpsTrack, photos) {
         const url = `${BASE_URL}/execution-sheet/add-activity-info`;
 
         const payload = {
             token,
-            operationId: activityInfoData.operationId,
-            ruralPropertyId: activityInfoData.ruralPropertyId,
-            polygonId: activityInfoData.polygonId,
-            worksheetId: activityInfoData.worksheetId,
-            activityId: activityInfoData.activityId,
-            notes: activityInfoData.notes || "",
-            gpsTrack: activityInfoData.gpsTrack || "",
-            photos: activityInfoData.photos || []
+            operationId,
+            ruralPropertyId,
+            polygonId,
+            worksheetId,
+            activityId,
+            notes,
+            gpsTrack,
+            photos
         };
 
         try {
@@ -416,18 +415,18 @@ export default class WorksheetService {
         }
     };
 
-    static async editOperation(token, editOperationData) {
+    static async editOperation(token , worksheetId, operationId, ruralPropertyId, polygonId, estimatedCompletionDate, estimatedDuration, notes) {
         const url = `${BASE_URL}/execution-sheet/edit-operation`;
 
         const payload = {
             token,
-            worksheetId: editOperationData.worksheetId,
-            operationId: editOperationData.operationId,
-            ruralPropertyId: editOperationData.ruralPropertyId,
-            polygonId: editOperationData.polygonId,
-            estimatedCompletionDate: editOperationData.estimatedCompletionDate || "",
-            estimatedDuration: editOperationData.estimatedDuration || "",
-            notes: editOperationData.notes || ""
+            worksheetId,
+            operationId,
+            ruralPropertyId,
+            polygonId,
+            estimatedCompletionDate,
+            estimatedDuration,
+            notes
         };
 
         try {
