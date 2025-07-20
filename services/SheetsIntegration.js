@@ -482,4 +482,44 @@ export default class WorksheetService {
             throw err;
         }
     };
+
+    // Adicione este método ao seu WorksheetService
+
+    static async scheduleWorksheet(token, worksheetId) {
+        const url = `${BASE_URL}/worksheet/scheduling-worksheets`;
+
+        const payload = {
+            token,
+            id: worksheetId
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage;
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.message || errorText;
+                } catch {
+                    errorMessage = errorText;
+                }
+                throw new Error(`Erro no servidor (${response.status}): ${errorMessage}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha na requisição de agendamento:', err);
+            throw err;
+        }
+    };
 }
