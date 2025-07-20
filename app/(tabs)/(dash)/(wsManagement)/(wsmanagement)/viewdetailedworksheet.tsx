@@ -32,7 +32,7 @@ interface WorksheetFeature {
     aigp: string;
     geometry: {
         type: string;
-        coordinates: number[][][]; // Coordenadas do polígono
+        coordinates: number[][][];
     } | null;
 }
 
@@ -89,7 +89,7 @@ export default function ViewDetailedWorksheet(): JSX.Element {
             );
 
             if (hasValidCoordinates) {
-                setShowMap(true); // Mostrar mapa automaticamente se há coordenadas
+                setShowMap(true);
             }
 
             Alert.alert('Sucesso', 'Folha de obra carregada com sucesso!', [
@@ -154,7 +154,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         return null;
     };
 
-    // Gerar cores distintas para cada parcela
     const getPolygonColor = (index: number): string => {
         const colors = [
             '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
@@ -164,7 +163,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         return colors[index % colors.length];
     };
 
-    // Processar coordenadas para o mapa
     const mapPolygons: MapPolygon[] = useMemo(() => {
         if (!worksheetData?.features) {
             console.log('Sem features para processar');
@@ -189,21 +187,18 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 return;
             }
 
-            // Processar os anéis do polígono
             const rings = feature.geometry.coordinates;
             if (rings.length === 0) {
                 console.warn(`Feature ${index} sem anéis de coordenadas`);
                 return;
             }
 
-            // Usar o primeiro anel (anel externo)
             const outerRing = rings[0];
             if (!Array.isArray(outerRing) || outerRing.length < 3) {
                 console.warn(`Feature ${index} com anel insuficiente:`, outerRing?.length);
                 return;
             }
 
-            // Transformar coordenadas
             const transformedCoords: { latitude: number; longitude: number }[] = [];
 
             for (const coord of outerRing) {
@@ -218,7 +213,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                 return;
             }
 
-            // Fechar o polígono se necessário
             const firstPoint = transformedCoords[0];
             const lastPoint = transformedCoords[transformedCoords.length - 1];
             if (firstPoint.latitude !== lastPoint.latitude || firstPoint.longitude !== lastPoint.longitude) {
@@ -240,7 +234,6 @@ export default function ViewDetailedWorksheet(): JSX.Element {
         return validPolygons;
     }, [worksheetData]);
 
-    // Calcular região do mapa baseada nas coordenadas
     const mapRegion = useMemo(() => {
         if (mapPolygons.length === 0) {
             console.log('Usando região padrão - centro de Portugal');
@@ -266,7 +259,7 @@ export default function ViewDetailedWorksheet(): JSX.Element {
             });
         });
 
-        const latDelta = Math.max(maxLat - minLat, 0.01) * 1.5; // Padding mínimo
+        const latDelta = Math.max(maxLat - minLat, 0.01) * 1.5;
         const lngDelta = Math.max(maxLng - minLng, 0.01) * 1.5;
 
         const region = {
@@ -420,7 +413,7 @@ export default function ViewDetailedWorksheet(): JSX.Element {
                                                     <Polygon
                                                         key={`polygon_${polygon.rural_property_id}_${polygon.polygon_id}`}
                                                         coordinates={polygon.coordinates}
-                                                        fillColor={`${polygon.color}40`} // 40 = 25% opacity
+                                                        fillColor={`${polygon.color}40`}
                                                         strokeColor={polygon.color}
                                                         strokeWidth={2}
                                                         tappable={true}

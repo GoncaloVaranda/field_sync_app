@@ -36,8 +36,14 @@ export default function Executionwsmanagement() {
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/startactivity?token=${token}&username=${username}&role=${role}` as `${string}:${string}`)}>
+                        onPress={() => router.push(`/startactivity?token=${token}&username=${username}&role=${role}`)}>
                         <Text style={styles.buttonText}>Começar atividade</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/viewoperationstatus?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Ver estado de uma operação</Text>
                     </Pressable>
 
 

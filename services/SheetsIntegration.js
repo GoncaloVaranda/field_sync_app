@@ -239,16 +239,16 @@ export default class WorksheetService {
         }
     };
 
-    static async startActivity(token, startActivityData) {
+    static async startActivity(token, operationId, ruralPropertyId, polygonId, worksheetId, startDate) {
         const url = `${BASE_URL}/execution-sheet/start-activity`;
 
         const payload = {
             token,
-            operationId: startActivityData.operationId,
-            ruralPropertyId: startActivityData.ruralPropertyId,
-            polygonId: startActivityData.polygonId,
-            worksheetId: startActivityData.worksheetId,
-            startDate: startActivityData.startDate
+            operationId,
+            ruralPropertyId,
+            polygonId,
+            worksheetId,
+            startDate
         };
 
         try {
@@ -312,15 +312,15 @@ export default class WorksheetService {
     };
 
 
-    static async viewOperationStatus(token, viewOperationData) {
+    static async viewOperationStatus(token, operationId, ruralPropertyId, polygonId, worksheetId) {
         const url = `${BASE_URL}/execution-sheet/view-operation-status`;
 
         const payload = {
             token,
-            operationId: viewOperationData.operationId,
-            ruralPropertyId: viewOperationData.ruralPropertyId,
-            polygonId: viewOperationData.polygonId,
-            worksheetId: viewOperationData.worksheetId
+            operationId,
+            ruralPropertyId,
+            polygonId,
+            worksheetId
         };
 
         try {

@@ -36,7 +36,6 @@ const AssignOperations: React.FC = () => {
         updatedAssignments[index][field] = value;
         setAssignments(updatedAssignments);
 
-        // Clear message when user starts typing
         if (message) {
             setMessage(null);
         }

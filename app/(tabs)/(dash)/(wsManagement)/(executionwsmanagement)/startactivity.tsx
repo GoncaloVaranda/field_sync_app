@@ -16,7 +16,6 @@ export default function StartActivity() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleStartActivity = async () => {
-        // Validate required fields
         if (!operationId.trim() || !ruralPropertyId.trim() || !polygonId.trim() || !worksheetId.trim() || !startDate.trim()) {
             Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios', [
                 { text: 'OK' }
@@ -26,17 +25,14 @@ export default function StartActivity() {
 
         setIsLoading(true);
         try {
-            const startActivityData = [
+
+            const data = await WorksheetService.startActivity(
+                token,
                 operationId,
                 ruralPropertyId,
                 polygonId,
                 worksheetId,
                 startDate
-            ];
-
-            const data = await WorksheetService.startActivity(
-                token as string,
-                startActivityData
             );
 
             console.log("Atividade iniciada com sucesso:", data);
@@ -136,14 +132,14 @@ export default function StartActivity() {
                         <Text style={styles.inputLabel}>Data de Início *</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="DD/MM/YYYY"
+                            placeholder="DD/MM/YYYY HH:mm"
                             value={startDate}
                             onChangeText={setStartDate}
                             autoCapitalize="none"
                             editable={!isLoading}
                         />
                         <Text style={styles.helpText}>
-                            Formato: Dia/Mês/Ano (ex: 19/07/2025)
+                            Formato: Dia/Mês/Ano HH:mm (ex: 19/07/2025 12:24)
                         </Text>
                     </View>
 
