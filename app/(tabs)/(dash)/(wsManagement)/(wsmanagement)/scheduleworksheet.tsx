@@ -1,8 +1,8 @@
 import BackButton from "@/app/utils/back_button";
+import WorksheetService from "@/services/SheetsIntegration";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, Animated } from "react-native";
-import WorksheetService from "@/services/SheetsIntegration";
+import { Alert, Animated, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ScheduleWorksheet() {
     const router = useRouter();
@@ -127,8 +127,9 @@ export default function ScheduleWorksheet() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <BackButton />
             <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                <BackButton />
+                
 
                 {/* Floating Orbs */}
                 <View style={styles.orbsContainer}>
