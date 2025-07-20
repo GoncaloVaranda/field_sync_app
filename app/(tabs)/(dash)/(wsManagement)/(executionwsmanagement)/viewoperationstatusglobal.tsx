@@ -212,12 +212,6 @@ export default function ViewOperationStatusGlobal() {
                                                                 {activity.id || 'N/A'}
                                                             </Text>
                                                             <Text style={styles.activityDetail}>
-                                                                <Text style={styles.detailLabel}>Status: </Text>
-                                                                <Text style={getStatusStyle(activity.status)}>
-                                                                    {activity.status}
-                                                                </Text>
-                                                            </Text>
-                                                            <Text style={styles.activityDetail}>
                                                                 <Text style={styles.detailLabel}>Início: </Text>
                                                                 {activity.starting_date || activity.start_date || 'Não informado'}
                                                             </Text>
