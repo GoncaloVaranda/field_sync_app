@@ -46,6 +46,14 @@ export default function Executionwsmanagement() {
                         <Text style={styles.buttonText}>Ver estado de uma operação</Text>
                     </Pressable>
 
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/viewoperationstatusglobal?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Ver estado global de uma operação</Text>
+                    </Pressable>
+
+
+
 
                 </View>
             </ScrollView>

@@ -384,13 +384,13 @@ export default class WorksheetService {
         }
     };
 
-    static async viewOperationStatusGlobal(token, viewOperationGlobalData) {
+    static async viewOperationStatusGlobal(token, worksheetId, operationId) {
         const url = `${BASE_URL}/execution-sheet/view-status-op-global-fe`;
 
         const payload = {
             token,
-            worksheetId: viewOperationGlobalData.worksheetId,
-            operationId: viewOperationGlobalData.operationId
+            worksheetId,
+            operationId
         };
 
         try {
