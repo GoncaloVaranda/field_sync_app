@@ -69,6 +69,7 @@ export default function ViewOperationStatusGlobal() {
             'in_progress': '#007AFF',
             'completed': '#34C759',
             'scheduled': '#AF52DE',
+
         };
 
         const matchedKey = Object.keys(statusColors).find(key =>
