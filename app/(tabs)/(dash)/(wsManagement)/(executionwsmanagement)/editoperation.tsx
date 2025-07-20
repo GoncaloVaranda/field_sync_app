@@ -4,27 +4,21 @@ import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import WorksheetService from "@/services/SheetsIntegration";
 
-export default function EditOperations() {
+export default function EditOperation() {
     const router = useRouter();
     const { token, username, role } = useLocalSearchParams();
 
-    const [worksheetId, setWorksheetId] = useState("");
     const [operationId, setOperationId] = useState("");
     const [ruralPropertyId, setRuralPropertyId] = useState("");
     const [polygonId, setPolygonId] = useState("");
+    const [worksheetId, setWorksheetId] = useState("");
     const [estimatedCompletionDate, setEstimatedCompletionDate] = useState("");
     const [estimatedDuration, setEstimatedDuration] = useState("");
     const [notes, setNotes] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-    const handleSubmit = async () => {
-        if (!token) {
-            router.push('/login');
-            return;
-        }
-
-        if (!worksheetId.trim() || !operationId.trim() || !ruralPropertyId.trim() || !polygonId.trim()) {
+    const handleEditOperation = async () => {
+        if (!operationId.trim() || !ruralPropertyId.trim() || !polygonId.trim() || !worksheetId.trim()) {
             Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios', [
                 { text: 'OK' }
             ]);
@@ -32,39 +26,48 @@ export default function EditOperations() {
         }
 
         setIsLoading(true);
-        setMessage(null);
-
         try {
-            const payload = {
+            const data = await WorksheetService.editOperation(
                 token,
-                worksheetId,
+                parseInt(worksheetId, 10),
                 operationId,
                 ruralPropertyId,
-                polygonId,
+                parseInt(polygonId, 10),
                 estimatedCompletionDate,
                 estimatedDuration,
                 notes
-            };
+            );
 
-            await WorksheetService.editOperation(payload);
-            setMessage({ type: 'success', text: 'Operação editada com sucesso!' });
+            console.log("Operação editada com sucesso:", data);
+            Alert.alert('Sucesso', 'Operação editada com sucesso!', [
+                { text: 'OK', onPress: () => router.back() }
+            ]);
+
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : 'Ocorreu um erro inesperado';
-            setMessage({ type: 'error', text: errorMessage });
+            if (err instanceof Error) {
+                console.log(err.message);
+                Alert.alert('Erro', err.message, [
+                    { text: 'Entendi' }
+                ]);
+            } else {
+                console.log("Erro inesperado:", err);
+                Alert.alert('Erro', 'Ocorreu um erro inesperado', [
+                    { text: 'Entendi' }
+                ]);
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
     const clearForm = () => {
-        setWorksheetId("");
         setOperationId("");
         setRuralPropertyId("");
         setPolygonId("");
+        setWorksheetId("");
         setEstimatedCompletionDate("");
         setEstimatedDuration("");
         setNotes("");
-        setMessage(null);
     };
 
     return (
@@ -90,6 +93,7 @@ export default function EditOperations() {
                             value={worksheetId}
                             onChangeText={setWorksheetId}
                             keyboardType="numeric"
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
                     </View>
@@ -101,6 +105,7 @@ export default function EditOperations() {
                             placeholder="Insira o código da operação"
                             value={operationId}
                             onChangeText={setOperationId}
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
                     </View>
@@ -112,6 +117,7 @@ export default function EditOperations() {
                             placeholder="Insira o ID da propriedade rural"
                             value={ruralPropertyId}
                             onChangeText={setRuralPropertyId}
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
                     </View>
@@ -124,6 +130,7 @@ export default function EditOperations() {
                             value={polygonId}
                             onChangeText={setPolygonId}
                             keyboardType="numeric"
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
                     </View>
@@ -132,11 +139,15 @@ export default function EditOperations() {
                         <Text style={styles.inputLabel}>Data Prevista de Conclusão</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Ex.: 31/12/2025"
+                            placeholder="DD/MM/YYYY HH:mm"
                             value={estimatedCompletionDate}
                             onChangeText={setEstimatedCompletionDate}
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
+                        <Text style={styles.helpText}>
+                            Formato: Dia/Mês/Ano (ex: 19/07/2025 12:40)
+                        </Text>
                     </View>
 
                     <View style={styles.inputContainer}>
@@ -146,6 +157,7 @@ export default function EditOperations() {
                             placeholder="Ex.: 2h 30m"
                             value={estimatedDuration}
                             onChangeText={setEstimatedDuration}
+                            autoCapitalize="none"
                             editable={!isLoading}
                         />
                     </View>
@@ -173,29 +185,20 @@ export default function EditOperations() {
                         </View>
                         <View style={styles.halfButton}>
                             <Button
-                                title={isLoading ? "Salvando..." : "Salvar"}
-                                onPress={handleSubmit}
+                                title={isLoading ? "Salvando..." : "Salvar Alterações"}
+                                onPress={handleEditOperation}
                                 disabled={isLoading}
-                                color="#007AFF"
+                                color="#34C759"
                             />
                         </View>
                     </View>
-
-                    {message && (
-                        <View style={[
-                            styles.messageContainer,
-                            message.type === 'success' ? styles.successMessage : styles.errorMessage
-                        ]}>
-                            <Text style={styles.messageText}>{message.text}</Text>
-                        </View>
-                    )}
 
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoTitle}>Informações Importantes:</Text>
                         <Text style={styles.infoText}>• Campos marcados com * são obrigatórios</Text>
                         <Text style={styles.infoText}>• Certifique-se de que os IDs existem no sistema</Text>
-                        <Text style={styles.infoText}>• A data deve estar no formato AAAA-MM-DD</Text>
-                        <Text style={styles.infoText}>• Verifique os dados antes de salvar</Text>
+                        <Text style={styles.infoText}>• A data deve estar no formato correto</Text>
+                        <Text style={styles.infoText}>• As alterações serão salvas imediatamente</Text>
                     </View>
                 </View>
             </ScrollView>
@@ -259,6 +262,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         backgroundColor: '#fff',
     },
+    helpText: {
+        fontSize: 12,
+        color: '#666',
+        marginTop: 4,
+        fontStyle: 'italic',
+    },
     buttonRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -274,7 +283,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderLeftWidth: 4,
         borderLeftColor: '#007AFF',
-        marginTop: 20,
     },
     infoTitle: {
         fontSize: 16,
@@ -287,22 +295,5 @@ const styles = StyleSheet.create({
         color: '#666',
         marginBottom: 4,
         lineHeight: 20,
-    },
-    messageContainer: {
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 20,
-        borderLeftWidth: 4,
-    },
-    successMessage: {
-        backgroundColor: '#E8F5E9',
-        borderLeftColor: '#34C759',
-    },
-    errorMessage: {
-        backgroundColor: '#FFEBEE',
-        borderLeftColor: '#FF3B30',
-    },
-    messageText: {
-        fontSize: 16,
     },
 });

@@ -54,14 +54,14 @@ export default function Executionwsmanagement() {
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/addinfo?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Adicionar informação</Text>
+                        onPress={() => router.push(`/viewoperationstatusglobal?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Ver estado global de uma operação</Text>
                     </Pressable>
 
                     <Pressable
                         style={styles.button}
-                        onPress={() => router.push(`/viewoperationstatusglobal?token=${token}&username=${username}&role=${role}`)}>
-                        <Text style={styles.buttonText}>Ver estado global de uma operação</Text>
+                        onPress={() => router.push(`/addinfo?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Adicionar informação</Text>
                     </Pressable>
 
                     <Pressable
