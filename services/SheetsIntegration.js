@@ -513,4 +513,64 @@ export default class WorksheetService {
             throw err;
         }
     };
+
+    static async listSchedule(token) {
+        const url = `${BASE_URL}/worksheet/list-calendar-events`;
+
+        const payload = {
+            token,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao editar a operação:', err);
+            throw err;
+        }
+    };
+
+    static async scheduleCalendar(token) {
+        const url = `${BASE_URL}/worksheet/worksheet/list-calendar-events`;
+
+        const payload = {
+            token,
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro no servidor (${response.status}): ${errorText}`);
+            }
+
+            return await response.json();
+
+        } catch (err) {
+            console.error('Falha ao editar a operação:', err);
+            throw err;
+        }
+    };
 }

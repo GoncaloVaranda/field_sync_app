@@ -52,6 +52,18 @@ export default function Wsmanagement() {
                         <Text style={styles.buttonText}>Agendar Folha de Obra</Text>
                     </Pressable>
 
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/listschedule?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Listar agendamentos</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => router.push(`/schedulecalendar?token=${token}&username=${username}&role=${role}`)}>
+                        <Text style={styles.buttonText}>Calendário de agendamentos</Text>
+                    </Pressable>
+
                 </View>
             </ScrollView>
         </View>
