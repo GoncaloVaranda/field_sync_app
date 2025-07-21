@@ -1,35 +1,32 @@
+import React from 'react';
+import { useRouter } from 'expo-router';
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/UsersIntegration";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useLocalSearchParams } from 'expo-router';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ChangeStateToRemovalRequest() {
-
     const router = useRouter();
-    const {token, username} = useLocalSearchParams();
-
+    const { token, username } = useLocalSearchParams();
 
     const confirMationButton = () => {
         Alert.alert(
-                'Confirmar',
-                'Tens a certeza?',
-                [{
-                    text: 'Sim',
-                    style: 'default',
-                    onPress: () => HandleChangeStateToRemovalRequest(),
-                },
+            'Confirmar',
+            'Tens a certeza?',
+            [{
+                text: 'Sim',
+                style: 'default',
+                onPress: () => HandleChangeStateToRemovalRequest(),
+            },
                 {
                     text: 'Não',
                     style: 'cancel',
                 },],
-            );
+        );
     }
 
     const HandleChangeStateToRemovalRequest = async () => {
         try {
-            
-            
             const data = await AuthService.changeStateToRemovalRequest(
                 token
             );
@@ -38,9 +35,9 @@ export default function ChangeStateToRemovalRequest() {
             Alert.alert('Success', 'Pedido de remoção efetuado', [
                 {text: 'OK'},
             ]);
-            
+
             router.dismissTo('/');
-            
+
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -52,21 +49,36 @@ export default function ChangeStateToRemovalRequest() {
             }
         }
     };
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                <BackButton/>
-                <View style={styles.mainContent}>
-                    <Text style={styles.title}>Pedir Remoção da Conta</Text>
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                contentInsetAdjustmentBehavior="automatic"
+            >
+                <View style={styles.backButtonContainer}>
+                    <BackButton />
                 </View>
 
-                <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Deseja efetuar a remoção da sua conta? </Text>
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title="Confirmar remoção"
+                <View style={styles.contentContainer}>
+                    <View style={styles.hero}>
+                        <Text style={styles.heroTitle}>Pedir Remoção da Conta</Text>
+                        <Text style={styles.heroSubtitle}>
+                            Confirme se deseja efetuar a remoção da sua conta
+                        </Text>
+                    </View>
+
+                    <View style={styles.formContainer}>
+                        <Text style={styles.warningText}>
+                            Deseja efetuar a remoção da sua conta? Esta ação irá enviar um pedido de remoção.
+                        </Text>
+
+                        <TouchableOpacity
+                            style={styles.button}
                             onPress={confirMationButton}
-                        />
+                        >
+                            <Text style={styles.buttonText}>Confirmar Remoção</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -77,63 +89,60 @@ export default function ChangeStateToRemovalRequest() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f8f9fa',
+    },
+    backButtonContainer: {
+        paddingTop: 5,
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingBottom: 10,
     },
     scrollContainer: {
         flexGrow: 1,
+    },
+    contentContainer: {
         paddingHorizontal: 25,
+        paddingTop: 80,
     },
-    input: {
-        height: 50,
-        borderColor: "#ddd",
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 15,
-        marginBottom: 15,
-        fontSize: 16,
-        backgroundColor: '#fff',
-    },
-    backButtonWrapper: {
-        position: 'absolute',
-        top: 40,
-        left: 15,
-        zIndex: 10,
-    },
-    mainContent: {
-        marginTop: 80,
-        paddingBottom: 40,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        textAlign: "center",
+    hero: {
         marginBottom: 30,
-        color: '#333',
-    },
-    smallerText: {
-        fontSize: 14,
-        color: '#666',
-        marginBottom: 20,
-    },
-    buttonContainer: {
-        marginTop: 30,
-        marginBottom: 40,
-    },
-
-    formContainer: {
-        width: '100%',
         marginTop: 10,
     },
-    stateOption: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+    heroTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 8,
+        textAlign: 'center',
     },
-    stateText: {
+    heroSubtitle: {
         fontSize: 16,
-        color: '#333',
+        color: '#7f8c8d',
+        textAlign: 'center',
+    },
+    formContainer: {
+        width: '100%',
+        marginTop: 20,
+    },
+    warningText: {
+        fontSize: 16,
+        color: '#34495e',
+        textAlign: 'center',
+        marginBottom: 40,
+        lineHeight: 24,
+    },
+    button: {
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#e74c3c',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 20,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
     },
 });

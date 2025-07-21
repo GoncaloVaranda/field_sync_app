@@ -1,78 +1,112 @@
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/UsersIntegration";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-
+import { useLocalSearchParams } from 'expo-router';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function Changepassword() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
 
-    const [currentPassword, setPassword] = useState("");
-    const [confirmation, setConfirmation] = useState("");
-    const [newPassword, setNewPassword] = useState("")
+    const [form, setForm] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmation: ''
+    });
+    const [message, setMessage] = useState<{type: string, text: string} | null>(null);
+
+    const handleChange = (name: string, value: string) => {
+        setForm(f => ({ ...f, [name]: value }));
+    };
 
     const handleChangePassword = async () => {
+        setMessage(null);
+
+        if (form.newPassword !== form.confirmation) {
+            setMessage({ type: 'error', text: 'As passwords não coincidem.' });
+            return;
+        }
 
         try {
             const data = await AuthService.changePassword(
                 token,
-                currentPassword,
-                newPassword,
-                confirmation
+                form.currentPassword,
+                form.newPassword,
+                form.confirmation
             );
 
             console.log("Palavra-Passe alterada com sucesso:", data);
-            Alert.alert('Success', 'Password successfully changed!', [
-                {text: 'OK'},
-            ]);
-            router.back();
+            setMessage({ type: 'success', text: 'Password alterada com sucesso!' });
+
+            setTimeout(() => router.back(), 1500);
 
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                console.log(err.message);
-                Alert.alert('Error', err.message, [
-                    {text: 'I understand'},
-                ]);
-
-            } else {
-                console.log("Unexpected error:", err);
-            }
+            const errorMessage = err instanceof Error ? err.message : 'Ocorreu um erro inesperado';
+            setMessage({ type: 'error', text: errorMessage });
+            console.log("Error:", err);
         }
     };
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-
-                <View style={styles.mainContent}>
-                    <Text style={styles.title}>Alterar Password</Text>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <View style={styles.headerContainer}>
+                    <BackButton/>
                 </View>
 
-                <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Preencha os parâmetros da Password e Confirmação da mesma para
-                        alterar os atributos </Text>
-                    <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" value={currentPassword}
-                               onChangeText={setPassword} secureTextEntry/>
-                    <TextInput style={styles.input} placeholder="Password Nova" placeholderTextColor="#999" value={newPassword}
-                               onChangeText={setNewPassword} secureTextEntry/>
-                    <TextInput style={styles.input} placeholder="Confirmação de Password" placeholderTextColor="#999" value={confirmation}
-                               onChangeText={setConfirmation} secureTextEntry/>
+                <View style={styles.contentContainer}>
+                    <View style={styles.hero}>
+                        <Text style={styles.heroTitle}>Alterar Password</Text>
+                        <Text style={styles.heroSubtitle}>Defina uma nova password para a sua conta</Text>
+                    </View>
 
-                    <Text style={styles.smallerText}></Text>
+                    <View style={styles.formContainer}>
+                        {message && (
+                            <View style={[styles.message, message.type === 'error' ? styles.errorMessage : styles.successMessage]}>
+                                <Text style={styles.messageText}>{message.text}</Text>
+                            </View>
+                        )}
 
-
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title="Confirmar alterações"
-                            onPress={handleChangePassword}
-                            disabled={!currentPassword || !confirmation || !newPassword}
+                        <Text style={styles.label}>Password Atual</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="••••••••"
+                            placeholderTextColor="#999"
+                            value={form.currentPassword}
+                            onChangeText={(text) => handleChange('currentPassword', text)}
+                            secureTextEntry
                         />
+
+                        <Text style={styles.label}>Nova Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="••••••••"
+                            placeholderTextColor="#999"
+                            value={form.newPassword}
+                            onChangeText={(text) => handleChange('newPassword', text)}
+                            secureTextEntry
+                        />
+
+                        <Text style={styles.label}>Confirmar Nova Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="••••••••"
+                            placeholderTextColor="#999"
+                            value={form.confirmation}
+                            onChangeText={(text) => handleChange('confirmation', text)}
+                            secureTextEntry
+                        />
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleChangePassword}
+                            disabled={!form.currentPassword || !form.newPassword || !form.confirmation}
+                        >
+                            <Text style={styles.buttonText}>Confirmar Alteração</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-
-                <BackButton/>
-                
             </ScrollView>
         </SafeAreaView>
     );
@@ -81,51 +115,84 @@ export default function Changepassword() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f8f9fa',
     },
     scrollContainer: {
         flexGrow: 1,
+    },
+    headerContainer: {
+        paddingHorizontal: 25,
+        paddingTop: 40,
+    },
+    backButton: {
+        alignSelf: 'flex-start',
+    },
+    contentContainer: {
         paddingHorizontal: 25,
     },
-    mainContent: {
-        marginTop: 80,
-        paddingBottom: 40,
+    hero: {
+        marginBottom: 40,
+        marginTop: 20,
     },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 30,
-        color: '#333',
+    heroTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 8,
+        textAlign: 'center',
     },
-    smallerText: {
+    heroSubtitle: {
+        fontSize: 16,
+        color: '#7f8c8d',
+        textAlign: 'center',
+    },
+    formContainer: {
+        width: '100%',
+        marginTop: 20,
+    },
+    label: {
         fontSize: 14,
-        color: '#666',
+        fontWeight: '500',
+        color: '#2c3e50',
         marginBottom: 8,
     },
     input: {
         height: 50,
-        borderColor: "#ddd",
+        borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 15,
-        marginBottom: 15,
+        marginBottom: 20,
         fontSize: 16,
         backgroundColor: '#fff',
     },
-    buttonContainer: {
-        marginTop: 30,
+    button: {
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#6B7A3E',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
         marginBottom: 40,
     },
-    formContainer: {
-        width: '100%',
-        marginTop: 10,
-    },
-    sectionLabelText: {
+    buttonText: {
+        color: '#fff',
         fontSize: 16,
-        fontWeight: "600",
-        marginTop: 25,
-        marginBottom: 10,
-        color: "#555",
+        fontWeight: '600',
+    },
+    message: {
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 20,
+    },
+    errorMessage: {
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    },
+    successMessage: {
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    },
+    messageText: {
+        fontSize: 14,
+        textAlign: 'center',
     },
 });

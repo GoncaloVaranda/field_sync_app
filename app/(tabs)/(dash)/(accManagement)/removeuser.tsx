@@ -1,14 +1,13 @@
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import BackButton from "@/app/utils/back_button";
 import AuthService from "@/services/UsersIntegration";
-import { Picker } from "@react-native-picker/picker";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useLocalSearchParams } from 'expo-router';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function RemoveUser() {
-
     const router = useRouter();
-    const {token, username} = useLocalSearchParams();
+    const { token, username } = useLocalSearchParams();
     const [targetId, setTargetId] = useState("");
 
     const HandleRemoveUser = async () => {
@@ -31,30 +30,44 @@ export default function RemoveUser() {
             }
         }
     };
-    return(
-        <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                <BackButton/>
-                <View style={styles.mainContent}>
-                    <Text style={styles.title}>Remover conta</Text>
-                </View>
-                <Text style={styles.inputLabel}>Digite o Username ou um email</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Username/Email"
-                    value={targetId}
-                    onChangeText={setTargetId}
-                    autoCapitalize="none"
-                    keyboardType="default"
-                />
 
-                <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Remover</Text>
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title="Confirmar alteração"
-                            onPress={HandleRemoveUser}
+    return (
+        <SafeAreaView style={styles.safeArea}>
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                contentInsetAdjustmentBehavior="automatic"
+            >
+                <View style={styles.backButtonContainer}>
+                    <BackButton />
+                </View>
+
+                <View style={styles.contentContainer}>
+                    <View style={styles.hero}>
+                        <Text style={styles.heroTitle}>Remover Conta</Text>
+                        <Text style={styles.heroSubtitle}>
+                            Insira o username ou email da conta a ser removida
+                        </Text>
+                    </View>
+
+                    <View style={styles.formContainer}>
+                        <Text style={styles.label}>Username/Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ex.: utilizador@email.com"
+                            placeholderTextColor="#999"
+                            value={targetId}
+                            onChangeText={setTargetId}
+                            autoCapitalize="none"
+                            keyboardType="default"
                         />
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={HandleRemoveUser}
+                            disabled={!targetId}
+                        >
+                            <Text style={styles.buttonText}>Confirmar Remoção</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -63,71 +76,71 @@ export default function RemoveUser() {
 };
 
 const styles = StyleSheet.create({
-safeArea: {
-    flex: 1,
-        backgroundColor: '#fff',
-},
-scrollContainer: {
-    flexGrow: 1,
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#f8f9fa',
+    },
+    backButtonContainer: {
+        paddingTop: 5,
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingBottom: 10,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+    },
+    contentContainer: {
         paddingHorizontal: 25,
-},
-input: {
-    height: 50,
-        borderColor: "#ddd",
+        paddingTop: 80,
+    },
+    hero: {
+        marginBottom: 30,
+        marginTop: 10,
+    },
+    heroTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    heroSubtitle: {
+        fontSize: 16,
+        color: '#7f8c8d',
+        textAlign: 'center',
+    },
+    formContainer: {
+        width: '100%',
+        marginTop: 20,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#2c3e50',
+        marginBottom: 8,
+    },
+    input: {
+        height: 50,
+        borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 15,
-        marginBottom: 15,
+        marginBottom: 20,
         fontSize: 16,
         backgroundColor: '#fff',
-},
-backButtonWrapper: {
-    position: 'absolute',
-        top: 40,
-        left: 15,
-        zIndex: 10,
-},
-mainContent: {
-    marginTop: 80,
-        paddingBottom: 40,
-},
-    inputLabel: {
-        fontSize: 16,
-        color: '#333',
-        marginBottom: 8,
-        fontWeight: '500',
     },
-title: {
-    fontSize: 24,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 30,
-        color: '#333',
-},
-smallerText: {
-    fontSize: 14,
-        color: '#666',
-        marginBottom: 20,
-},
-buttonContainer: {
-    marginTop: 30,
-        marginBottom: 40,
-},
-
-formContainer: {
-    width: '100%',
-        marginTop: 10,
-},
-stateOption: {
-    flexDirection: 'row',
-        justifyContent: 'space-between',
+    button: {
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#e74c3c',
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-},
-stateText: {
-    fontSize: 16,
-        color: '#333',
-},
+        marginTop: 10,
+        marginBottom: 20,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 });
