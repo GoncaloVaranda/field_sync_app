@@ -3,15 +3,33 @@ import AuthService from "@/services/UsersIntegration";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, ActionSheetIOS } from "react-native";
 
 export default function ChangeState() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
-    const [state, setState] = useState("");
+    const [state, setState] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const showStatePicker = () => {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options: ['Cancelar', 'Activate', 'Suspended', 'Deactivate'],
+                cancelButtonIndex: 0,
+            },
+            (buttonIndex) => {
+                if (buttonIndex !== 0) {
+                    const states = [null, 'active', 'suspended', 'disabled'];
+                    // @ts-ignore
+                    setState(states[buttonIndex]);
+                }
+            }
+        );
+    };
 
     const HandleChangeState = async () => {
+        setIsSubmitting(true);
         try {
             const data = await AuthService.changeState(
                 token,
@@ -21,9 +39,8 @@ export default function ChangeState() {
 
             console.log("Estado da conta alterado com sucesso:", data);
             Alert.alert('Success', 'Account state successfully changed!', [
-                { text: 'OK' },
+                { text: 'OK', onPress: () => router.back() },
             ]);
-            router.back();
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
@@ -32,13 +49,19 @@ export default function ChangeState() {
                 ]);
             } else {
                 console.log("Unexpected error:", err);
+                Alert.alert('Error', 'An unexpected error occurred');
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                keyboardShouldPersistTaps="always"
+            >
                 <BackButton/>
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar estado de conta</Text>
@@ -58,25 +81,42 @@ export default function ChangeState() {
 
                     <View style={styles.stateOption}>
                         <Text style={styles.stateText}>Definir privacidade:</Text>
-                        <View style={styles.pickerContainer}>
-                            <Picker
-                                selectedValue={state}
-                                onValueChange={(value) => setState(value)}
-                                style={styles.picker}
-                                dropdownIconColor="#6B7A3E"
+
+                        {Platform.OS === 'ios' ? (
+                            <TouchableOpacity
+                                onPress={showStatePicker}
+                                style={styles.iosPickerTrigger}
                             >
-                                <Picker.Item label="Activate" value="active" />
-                                <Picker.Item label="Suspended" value="suspended" />
-                                <Picker.Item label="Deactivate" value="disabled" />
-                            </Picker>
-                        </View>
+                                <Text style={[styles.pickerText, !state && styles.placeholderText]}>
+                                    {state === 'active' ? 'Activate' :
+                                        state === 'suspended' ? 'Suspended' :
+                                            state === 'disabled' ? 'Deactivate' :
+                                                'Selecione um estado...'}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <View style={styles.pickerContainer}>
+                                <Picker
+                                    selectedValue={state}
+                                    onValueChange={(value) => setState(value)}
+                                    style={styles.picker}
+                                    dropdownIconColor="#6B7A3E"
+                                    mode="dropdown"
+                                >
+                                    <Picker.Item label="Selecione um estado..." value={null} />
+                                    <Picker.Item label="Activate" value="active" />
+                                    <Picker.Item label="Suspended" value="suspended" />
+                                    <Picker.Item label="Deactivate" value="disabled" />
+                                </Picker>
+                            </View>
+                        )}
                     </View>
 
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Confirmar alteração"
+                            title={isSubmitting ? "Processing..." : "Confirmar alteração"}
                             onPress={HandleChangeState}
-                            disabled={!targetUsername || !state}
+                            disabled={!targetUsername || !state || isSubmitting}
                             color="#6B7A3E"
                         />
                     </View>
@@ -148,13 +188,26 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#e2e8f0',
         borderRadius: 8,
-        overflow: 'hidden',
     },
     picker: {
         height: 50,
         width: '100%',
-        backgroundColor: '#ffffff',
         color: '#334155',
+    },
+    iosPickerTrigger: {
+        height: 50,
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+        borderRadius: 8,
+    },
+    pickerText: {
+        fontSize: 16,
+        color: '#334155',
+    },
+    placeholderText: {
+        color: '#999',
     },
     buttonContainer: {
         marginTop: 10,

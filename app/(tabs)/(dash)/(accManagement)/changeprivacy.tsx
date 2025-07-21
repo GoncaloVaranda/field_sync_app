@@ -3,13 +3,30 @@ import AuthService from "@/services/UsersIntegration";
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Button, Platform, SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, ActionSheetIOS } from "react-native";
 import LogoutModal from "../../../utils/LogoutModal";
 
 export default function Changeprivacy() {
     const router = useRouter();
     const { token, username, role } = useLocalSearchParams();
-    const [privacy, setPrivacy] = useState("");
+    const [privacy, setPrivacy] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const showPrivacyPicker = () => {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options: ['Cancelar', 'Público', 'Privado'],
+                cancelButtonIndex: 0,
+            },
+            (buttonIndex) => {
+                if (buttonIndex !== 0) {
+                    const privacyOptions = [null, 'public', 'private'];
+                    // @ts-ignore
+                    setPrivacy(privacyOptions[buttonIndex]);
+                }
+            }
+        );
+    };
 
     const handleChangePrivacy = async () => {
         if (!privacy) {
@@ -19,6 +36,7 @@ export default function Changeprivacy() {
             return;
         }
 
+        setIsSubmitting(true);
         try {
             const data = await AuthService.changePrivacy(
                 token,
@@ -27,9 +45,8 @@ export default function Changeprivacy() {
 
             console.log("Privacidade alterada com sucesso:", data);
             Alert.alert('Sucesso', 'Privacidade alterada com sucesso!', [
-                {text: 'OK'},
+                {text: 'OK', onPress: () => router.back()},
             ]);
-            router.back();
 
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -43,6 +60,8 @@ export default function Changeprivacy() {
                     {text: 'OK'},
                 ]);
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -58,7 +77,10 @@ export default function Changeprivacy() {
                 />
             </View>
 
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                keyboardShouldPersistTaps="always"
+            >
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Alterar Privacidade</Text>
                     <Text style={styles.subtitle}>
@@ -69,24 +91,40 @@ export default function Changeprivacy() {
                 <View style={styles.formContainer}>
                     <View style={styles.privacyOption}>
                         <Text style={styles.label}>Configuração de privacidade:</Text>
-                        <View style={styles.pickerContainer}>
-                            <Picker
-                                selectedValue={privacy}
-                                onValueChange={(value) => setPrivacy(value)}
-                                style={styles.picker}
-                                dropdownIconColor="#6B7A3E"
+
+                        {Platform.OS === 'ios' ? (
+                            <TouchableOpacity
+                                onPress={showPrivacyPicker}
+                                style={styles.iosPickerTrigger}
                             >
-                                <Picker.Item label="Selecione..." value="" />
-                                <Picker.Item label="Público" value="public" />
-                                <Picker.Item label="Privado" value="private" />
-                            </Picker>
-                        </View>
+                                <Text style={[styles.pickerText, !privacy && styles.placeholderText]}>
+                                    {privacy === 'public' ? 'Público' :
+                                        privacy === 'private' ? 'Privado' :
+                                            'Selecione uma opção...'}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <View style={styles.pickerContainer}>
+                                <Picker
+                                    selectedValue={privacy}
+                                    onValueChange={(value) => setPrivacy(value)}
+                                    style={styles.picker}
+                                    dropdownIconColor="#6B7A3E"
+                                    mode="dropdown"
+                                >
+                                    <Picker.Item label="Selecione..." value={null} />
+                                    <Picker.Item label="Público" value="public" />
+                                    <Picker.Item label="Privado" value="private" />
+                                </Picker>
+                            </View>
+                        )}
                     </View>
 
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Confirmar alterações"
+                            title={isSubmitting ? "Processando..." : "Confirmar alterações"}
                             onPress={handleChangePrivacy}
+                            disabled={!privacy || isSubmitting}
                             color="#6B7A3E"
                         />
                     </View>
@@ -100,8 +138,6 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: '#f8fafc',
-        position: 'relative',
-        overflow: 'hidden',
     },
     header: {
         flexDirection: 'row',
@@ -109,7 +145,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         paddingTop: 200,
-        zIndex: 10,
     },
     scrollContainer: {
         flexGrow: 1,
@@ -154,12 +189,27 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E5E7EB',
         borderRadius: 8,
-        overflow: 'hidden',
     },
     picker: {
         height: 50,
         width: '100%',
+        color: '#374151',
+    },
+    iosPickerTrigger: {
+        height: 50,
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: '#E5E7EB',
+        borderRadius: 8,
         backgroundColor: '#FFFFFF',
+    },
+    pickerText: {
+        fontSize: 16,
+        color: '#374151',
+    },
+    placeholderText: {
+        color: '#9CA3AF',
     },
     buttonContainer: {
         marginTop: 16,

@@ -3,13 +3,13 @@ import AuthService from "@/services/UsersIntegration";
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, ActionSheetIOS, TouchableOpacity } from "react-native";
 
 export default function ChangeRole() {
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChangeRole = async () => {
@@ -43,12 +43,27 @@ export default function ChangeRole() {
         }
     };
 
+    const showRolePicker = () => {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options: ['Cancelar', 'Registered User', 'Adherent Landowner User', 'Partner Operator', 'Partner Representative Back-Office', 'Sheet General Viewer Back-Office', 'Sheet Detailed Viewer Back-Office', 'Sheet Manager Back-Office', 'System Back-Office'],
+                cancelButtonIndex: 0,
+            },
+            (buttonIndex) => {
+                if (buttonIndex !== 0) {
+                    const roles = [null, 'Registered User', 'Adherent Landowner User', 'Partner Operator', 'Partner Representative Back-Office', 'Sheet General Viewer Back-Office', 'Sheet Detailed Viewer Back-Office', 'Sheet Manager Back-Office', 'System Back-Office'];
+                    // @ts-ignore
+                    setRole(roles[buttonIndex]);
+                }
+            }
+        );
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
-
             <ScrollView
                 contentContainerStyle={styles.scrollContainer}
-                keyboardShouldPersistTaps="handled"
+                keyboardShouldPersistTaps="always"
             >
                 <View style={styles.header}>
                     <BackButton/>
@@ -73,24 +88,34 @@ export default function ChangeRole() {
                     />
 
                     <Text style={styles.label}>Novo Tipo de Conta</Text>
-                    <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={role}
-                            onValueChange={(itemValue) => setRole(itemValue)}
-                            style={styles.picker}
-                            dropdownIconColor="#64748b"
-                        >
-                            <Picker.Item label="Selecione um tipo de conta..." value="" enabled={false} />
-                            <Picker.Item label="Registered User" value="Registered User" />
-                            <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
-                            <Picker.Item label="Partner Operator" value="Partner Operator" />
-                            <Picker.Item label="Partner Representative Back-Office" value="Partner Representative Back-Office" />
-                            <Picker.Item label="Sheet General Viewer Back-Office" value="Sheet General Viewer Back-Office" />
-                            <Picker.Item label="Sheet Detailed Viewer Back-Office" value="Sheet Detailed Viewer Back-Office" />
-                            <Picker.Item label="Sheet Manager Back-Office" value="Sheet Manager Back-Office" />
-                            <Picker.Item label="System Back-Office" value="System Back-Office" />
-                        </Picker>
-                    </View>
+
+                    {Platform.OS === 'ios' ? (
+                        <TouchableOpacity onPress={showRolePicker} style={styles.iosPickerTrigger}>
+                            <Text style={[styles.iosPickerText, !role && styles.placeholderText]}>
+                                {role || 'Selecione um tipo de conta...'}
+                            </Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <View style={styles.androidPickerContainer}>
+                            <Picker
+                                selectedValue={role}
+                                onValueChange={(itemValue) => setRole(itemValue)}
+                                style={styles.androidPicker}
+                                dropdownIconColor="#6B7A3E"
+                                mode="dropdown"
+                            >
+                                <Picker.Item label="Selecione um tipo de conta..." value={null} />
+                                <Picker.Item label="Registered User" value="Registered User" />
+                                <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
+                                <Picker.Item label="Partner Operator" value="Partner Operator" />
+                                <Picker.Item label="Partner Representative Back-Office" value="Partner Representative Back-Office" />
+                                <Picker.Item label="Sheet General Viewer Back-Office" value="Sheet General Viewer Back-Office" />
+                                <Picker.Item label="Sheet Detailed Viewer Back-Office" value="Sheet Detailed Viewer Back-Office" />
+                                <Picker.Item label="Sheet Manager Back-Office" value="Sheet Manager Back-Office" />
+                                <Picker.Item label="System Back-Office" value="System Back-Office" />
+                            </Picker>
+                        </View>
+                    )}
 
                     <View style={styles.buttonContainer}>
                         <Button
@@ -100,7 +125,6 @@ export default function ChangeRole() {
                             color="#6B7A3E"
                         />
                     </View>
-
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -115,7 +139,6 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         paddingHorizontal: 25,
-        zIndex: 1,
     },
     header: {
         marginTop: 20,
@@ -158,16 +181,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         color: '#0f172a',
     },
-    pickerContainer: {
-        borderColor: "#e2e8f0",
-        borderWidth: 1,
-        borderRadius: 8,
+    iosPickerTrigger: {
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e2e8f0',
         marginBottom: 25,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
     },
-    picker: {
-        height: 50,
+    iosPickerText: {
+        fontSize: 16,
+        color: '#0f172a',
+    },
+    placeholderText: {
+        color: '#94a3b8',
+    },
+    androidPickerContainer: {
+        marginBottom: 25,
+    },
+    androidPicker: {
+        width: '100%',
         color: '#0f172a',
     },
     buttonContainer: {
@@ -175,32 +206,5 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         borderRadius: 8,
         overflow: 'hidden',
-    },
-    infoBox: {
-        marginTop: 30,
-        padding: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#e2e8f0',
-    },
-    roleInfo: {
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        backgroundColor: 'rgba(16, 185, 129, 0.05)',
-        borderRadius: 6,
-        borderLeftWidth: 3,
-        borderLeftColor: '#10b981',
-        marginBottom: 10,
-    },
-    roleName: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#10b981',
-        marginBottom: 4,
-    },
-    roleDesc: {
-        fontSize: 13,
-        color: '#64748b',
     },
 });
