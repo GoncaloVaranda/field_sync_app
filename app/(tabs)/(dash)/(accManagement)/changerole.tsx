@@ -6,14 +6,14 @@ import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ChangeRole() {
-
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
     const [role, setRole] = useState("");
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChangeRole = async () => {
+        setIsSubmitting(true);
         try {
             const data = await AuthService.changeRole(
                 token,
@@ -22,110 +22,185 @@ export default function ChangeRole() {
             );
 
             console.log("Tipo de conta alterado com sucesso:", data);
-            Alert.alert('Success', 'Attributes successfully changed!', [
-                { text: 'OK' },
+            Alert.alert('Sucesso', 'Tipo de conta alterado com sucesso!', [
+                {
+                    text: 'OK',
+                    onPress: () => router.back()
+                },
             ]);
-            router.back();
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.log(err.message);
-                Alert.alert('Error', err.message, [
-                    {text: 'I understand'},
+                Alert.alert('Erro', err.message, [
+                    {text: 'Entendi'},
                 ]);
             } else {
                 console.log("Unexpected error:", err);
+                Alert.alert('Erro', 'Ocorreu um erro inesperado');
             }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
 
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                <BackButton/>
-                
-                <View style={styles.mainContent}>
-                    <Text style={styles.title}>Alterar tipo de Conta</Text>
+            <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+                keyboardShouldPersistTaps="handled"
+            >
+                <View style={styles.header}>
+                    <BackButton/>
+                </View>
+
+                <View style={styles.hero}>
+                    <Text style={styles.heroTitle}>Alterar Tipo de Conta</Text>
+                    <Text style={styles.heroSubtitle}>
+                        Defina um novo tipo de conta para um utilizador específico
+                    </Text>
                 </View>
 
                 <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Escreva o Username da conta alvo à alteração, e selecione o novo tipo de conta. </Text>
-
+                    <Text style={styles.label}>Nome de Utilizador</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Nome de utilizador alvo"
-                        placeholderTextColor="#999"
+                        placeholder="Digite o nome do utilizador"
+                        placeholderTextColor="#94a3b8"
                         value={targetUsername}
                         onChangeText={setTargetUsername}
                         autoCapitalize="none"
                     />
 
-                    <Picker selectedValue={role} onValueChange={(itemValue) => setRole(itemValue)} style={styles.input}>
-                    <Picker.Item label="Registered User" value="Registered User" />
-                    <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
-                    <Picker.Item label="Partner Operator" value="Partner Operator" />
-                    <Picker.Item label="Partner Representative Back-Office" value="Partner Representative Back-Office" />
-                    <Picker.Item label="Sheet General Viewer Back-Office" value="Sheet General Viewer Back-Office" />
-                    <Picker.Item label="Sheet Detailed Viewer Back-Office" value="Sheet Detailed Viewer Back-Office" />
-                    <Picker.Item label="Sheet Manager Back-Office" value="Sheet Manager Back-Office" />
-                    <Picker.Item label="System Back-Office" value="System Back-Office" />
-                    </Picker>
+                    <Text style={styles.label}>Novo Tipo de Conta</Text>
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={role}
+                            onValueChange={(itemValue) => setRole(itemValue)}
+                            style={styles.picker}
+                            dropdownIconColor="#64748b"
+                        >
+                            <Picker.Item label="Selecione um tipo de conta..." value="" enabled={false} />
+                            <Picker.Item label="Registered User" value="Registered User" />
+                            <Picker.Item label="Adherent Landowner User" value="Adherent Landowner User" />
+                            <Picker.Item label="Partner Operator" value="Partner Operator" />
+                            <Picker.Item label="Partner Representative Back-Office" value="Partner Representative Back-Office" />
+                            <Picker.Item label="Sheet General Viewer Back-Office" value="Sheet General Viewer Back-Office" />
+                            <Picker.Item label="Sheet Detailed Viewer Back-Office" value="Sheet Detailed Viewer Back-Office" />
+                            <Picker.Item label="Sheet Manager Back-Office" value="Sheet Manager Back-Office" />
+                            <Picker.Item label="System Back-Office" value="System Back-Office" />
+                        </Picker>
+                    </View>
 
                     <View style={styles.buttonContainer}>
                         <Button
-                            title="Confirmar alteração"
+                            title={isSubmitting ? "A processar..." : "Confirmar alteração"}
                             onPress={handleChangeRole}
-                            disabled={!targetUsername || !role}
+                            disabled={!targetUsername || !role || isSubmitting}
+                            color="#6B7A3E"
                         />
                     </View>
+
                 </View>
             </ScrollView>
         </SafeAreaView>
-
     );
 };
 
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f8fafc',
     },
     scrollContainer: {
         flexGrow: 1,
         paddingHorizontal: 25,
+        zIndex: 1,
     },
-    mainContent: {
-        marginTop: 80,
-        paddingBottom: 40,
+    header: {
+        marginTop: 20,
+        paddingTop: 200,
     },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
+    hero: {
+        marginTop: 20,
+        marginBottom: 40,
+    },
+    heroTitle: {
+        fontSize: 28,
+        fontWeight: "600",
         textAlign: "center",
-        marginBottom: 10,
-        color: '#333',
+        color: '#0f172a',
+        marginBottom: 8,
     },
-    smallerText: {
-        fontSize: 14,
-        color: '#666',
+    heroSubtitle: {
+        fontSize: 16,
+        textAlign: "center",
+        color: '#64748b',
+    },
+    formContainer: {
+        width: '100%',
+        marginBottom: 40,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#0f172a',
         marginBottom: 8,
     },
     input: {
         height: 50,
-        borderColor: "#ddd",
-        borderWidth: 2,
+        borderColor: "#e2e8f0",
+        borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 15,
-        marginBottom: 30,
+        marginBottom: 25,
         fontSize: 16,
         backgroundColor: '#fff',
+        color: '#0f172a',
+    },
+    pickerContainer: {
+        borderColor: "#e2e8f0",
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 25,
+        backgroundColor: '#fff',
+        overflow: 'hidden',
+    },
+    picker: {
+        height: 50,
+        color: '#0f172a',
     },
     buttonContainer: {
-        marginTop: 30,
-        marginBottom: 40,
+        marginTop: 15,
+        marginBottom: 30,
+        borderRadius: 8,
+        overflow: 'hidden',
     },
-    formContainer: {
-        width: '100%',
-        marginTop: 10,
+    infoBox: {
+        marginTop: 30,
+        padding: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
+    roleInfo: {
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+        borderRadius: 6,
+        borderLeftWidth: 3,
+        borderLeftColor: '#10b981',
+        marginBottom: 10,
+    },
+    roleName: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#10b981',
+        marginBottom: 4,
+    },
+    roleDesc: {
+        fontSize: 13,
+        color: '#64748b',
     },
 });

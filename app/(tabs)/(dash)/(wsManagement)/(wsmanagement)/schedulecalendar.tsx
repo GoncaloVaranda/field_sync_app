@@ -8,8 +8,9 @@ import {
     Text,
     View,
     Animated,
+    TouchableOpacity
 } from "react-native";
-import BackButton from "@/app/utils/back_button";
+import { Ionicons } from '@expo/vector-icons';
 import WorksheetService from "@/services/SheetsIntegration";
 import { Calendar } from "react-native-calendars";
 
@@ -28,13 +29,15 @@ type Schedule = {
     event_start_date: string;
     event_end_date: string;
     event_location?: string;
+    event_status?: string;
 };
 
 export default function ScheduleCalendarView() {
+    const router = useRouter();
     const { token } = useLocalSearchParams();
     const [loading, setLoading] = useState(true);
-    const [schedules, setSchedules] = useState<any[]>([]);
-    const [scheduledDates, setScheduledDates] = useState<{[date: string]: any}>({});
+    const [schedules, setSchedules] = useState<Schedule[]>([]);
+    const [scheduledDates, setScheduledDates] = useState<MarkedDates>({});
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -112,10 +115,10 @@ export default function ScheduleCalendarView() {
         );
     };
 
-    const getStatusStyle = (status: string) => {
-        switch (status) {
-            case 'Concluído': return styles.statusCompleted;
-            case 'Cancelado': return styles.statusCancelled;
+    const getStatusStyle = (status: string = '') => {
+        switch (status.toLowerCase()) {
+            case 'concluído': return styles.statusCompleted;
+            case 'cancelado': return styles.statusCancelled;
             default: return styles.statusScheduled;
         }
     };
@@ -143,10 +146,17 @@ export default function ScheduleCalendarView() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            {/* Custom Back Button */}
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => router.back()}
+                disabled={loading}
+            >
+                <Ionicons name="arrow-back" size={24} color="#059669" />
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </TouchableOpacity>
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <View style={styles.backButtonContainer}>
-                    <BackButton />
-                </View>
                 {/* Floating Orbs */}
                 <View style={styles.orbsContainer}>
                     <Animated.View
@@ -230,13 +240,13 @@ export default function ScheduleCalendarView() {
 
                         {getSchedulesForSelectedDate().length > 0 ? (
                             getSchedulesForSelectedDate().map((schedule, index) => (
-                                <View key={index} style={styles.scheduleCard}>
+                                <View key={`${schedule.worksheet_id}-${index}`} style={styles.scheduleCard}>
                                     <View style={styles.scheduleHeader}>
                                         <Text style={styles.scheduleId}>
                                             Folha #{schedule.worksheet_id}
                                         </Text>
                                         <View style={[styles.statusBadge, getStatusStyle(schedule.event_status)]}>
-                                            <Text style={styles.statusText}>{schedule.event_status}</Text>
+                                            <Text style={styles.statusText}>{schedule.event_status || 'Agendado'}</Text>
                                         </View>
                                     </View>
 
@@ -268,12 +278,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f8f9fa',
     },
-    backButtonContainer: {
-        position: 'absolute',
-        top: 50,
-        left: 16,
-        zIndex: 999,
-        backgroundColor: 'transparent',
+    backButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        paddingTop: 8,
+        zIndex: 10,
+    },
+    backButtonText: {
+        marginLeft: 8,
+        color: '#059669',
+        fontSize: 16,
+        fontWeight: '500',
     },
     scrollContainer: {
         flexGrow: 1,
@@ -358,7 +374,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     header: {
-        marginTop: 100,
+        marginTop: 60, // Adjusted to accommodate back button
         paddingVertical: 16,
         alignItems: 'center',
         zIndex: 1,
@@ -390,45 +406,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 3,
-    },
-    legendContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 20,
-        backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 16,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
-    },
-    legendItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    legendDot: {
-        width: 12,
-        height: 12,
-        borderRadius: 6,
-        marginRight: 8,
-    },
-    legendScheduled: {
-        backgroundColor: '#059669',
-    },
-    legendCompleted: {
-        backgroundColor: '#16a34a',
-    },
-    legendCancelled: {
-        backgroundColor: '#dc2626',
-    },
-    legendText: {
-        fontSize: 14,
-        color: '#374151',
     },
     schedulesContainer: {
         marginTop: 24,

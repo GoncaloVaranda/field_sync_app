@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ChangeState() {
-
     const router = useRouter();
     const { token, username } = useLocalSearchParams();
     const [targetUsername, setTargetUsername] = useState("");
@@ -46,17 +45,31 @@ export default function ChangeState() {
                 </View>
 
                 <View style={styles.formContainer}>
-                    <Text style={styles.smallerText}>Escreva o Username da conta alvo à alteração, e selecione o novo estado da conta. </Text>
+                    <Text style={styles.smallerText}>Escreva o Username da conta alvo à alteração, e selecione o novo estado da conta.</Text>
 
-                    <TextInput style={styles.input} placeholder="Nome de utilizador alvo" placeholderTextColor="#999" value={targetUsername} onChangeText={setTargetUsername} autoCapitalize="none"/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nome de utilizador alvo"
+                        placeholderTextColor="#999"
+                        value={targetUsername}
+                        onChangeText={setTargetUsername}
+                        autoCapitalize="none"
+                    />
 
                     <View style={styles.stateOption}>
                         <Text style={styles.stateText}>Definir privacidade:</Text>
-                        <Picker selectedValue={state} onValueChange={(value) => setState(value)}>
-                            <Picker.Item label="Activa" value="active" />
-                            <Picker.Item label="Suspensa" value="suspended" />
-                            <Picker.Item label="Desactiva" value="disabled" />
-                        </Picker>
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={state}
+                                onValueChange={(value) => setState(value)}
+                                style={styles.picker}
+                                dropdownIconColor="#6B7A3E"
+                            >
+                                <Picker.Item label="Activate" value="active" />
+                                <Picker.Item label="Suspended" value="suspended" />
+                                <Picker.Item label="Deactivate" value="disabled" />
+                            </Picker>
+                        </View>
                     </View>
 
                     <View style={styles.buttonContainer}>
@@ -64,6 +77,7 @@ export default function ChangeState() {
                             title="Confirmar alteração"
                             onPress={HandleChangeState}
                             disabled={!targetUsername || !state}
+                            color="#6B7A3E"
                         />
                     </View>
                 </View>
@@ -75,63 +89,76 @@ export default function ChangeState() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f8fafc',
     },
     scrollContainer: {
         flexGrow: 1,
         paddingHorizontal: 25,
-    },
-    input: {
-        height: 50,
-        borderColor: "#ddd",
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 15,
-        marginBottom: 15,
-        fontSize: 16,
-        backgroundColor: '#fff',
-    },
-    backButtonWrapper: {
-        position: 'absolute',
-        top: 40,
-        left: 15,
-        zIndex: 10,
+        paddingBottom: 40,
     },
     mainContent: {
-        marginTop: 80,
-        paddingBottom: 40,
+        marginTop: 60,
+        paddingBottom: 20,
     },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
-        marginBottom: 30,
-        color: '#333',
+        marginBottom: 10,
+        color: '#1e293b',
+    },
+    formContainer: {
+        backgroundColor: '#ffffff',
+        padding: 25,
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 3,
+        marginTop: 20,
+    },
+    input: {
+        height: 50,
+        borderColor: "#e2e8f0",
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        marginBottom: 20,
+        fontSize: 16,
+        backgroundColor: '#ffffff',
+        color: '#334155',
     },
     smallerText: {
         fontSize: 14,
-        color: '#666',
-        marginBottom: 20,
-    },
-    buttonContainer: {
-        marginTop: 30,
-        marginBottom: 40,
-    },
-
-    formContainer: {
-        width: '100%',
-        marginTop: 10,
+        color: '#64748b',
+        marginBottom: 25,
+        lineHeight: 20,
     },
     stateOption: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        marginBottom: 20,
     },
     stateText: {
         fontSize: 16,
-        color: '#333',
+        color: '#334155',
+        marginBottom: 10,
+        fontWeight: '500',
+    },
+    pickerContainer: {
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    picker: {
+        height: 50,
+        width: '100%',
+        backgroundColor: '#ffffff',
+        color: '#334155',
+    },
+    buttonContainer: {
+        marginTop: 10,
+        borderRadius: 25,
+        overflow: 'hidden',
     },
 });

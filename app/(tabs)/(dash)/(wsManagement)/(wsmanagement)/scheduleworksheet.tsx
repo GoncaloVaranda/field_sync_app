@@ -1,8 +1,8 @@
-import BackButton from "@/app/utils/back_button";
-import WorksheetService from "@/services/SheetsIntegration";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Animated, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Animated, Button, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import WorksheetService from "@/services/SheetsIntegration";
 
 export default function ScheduleWorksheet() {
     const router = useRouter();
@@ -83,7 +83,6 @@ export default function ScheduleWorksheet() {
             console.error('❌ Erro ao agendar folha:', err);
 
             if (err instanceof Error) {
-                // Tratar mensagens de erro específicas do backend
                 let errorMessage = err.message;
 
                 if (errorMessage.includes('invalid or expired token')) {
@@ -127,10 +126,17 @@ export default function ScheduleWorksheet() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <BackButton />
-            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-                
+            {/* Botão de voltar personalizado */}
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => router.back()}
+                disabled={isLoading}
+            >
+                <Ionicons name="arrow-back" size={24} color="#059669" />
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </TouchableOpacity>
 
+            <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
                 {/* Floating Orbs */}
                 <View style={styles.orbsContainer}>
                     <Animated.View
@@ -233,6 +239,19 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: '#f8f9fa',
+    },
+    backButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        paddingTop: 8,
+        zIndex: 10,
+    },
+    backButtonText: {
+        marginLeft: 8,
+        color: '#059669',
+        fontSize: 16,
+        fontWeight: '500',
     },
     scrollContainer: {
         flexGrow: 1,

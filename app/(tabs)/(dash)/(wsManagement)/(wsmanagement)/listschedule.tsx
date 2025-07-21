@@ -11,7 +11,7 @@ import {
     View,
     Animated
 } from "react-native";
-import BackButton from "@/app/utils/back_button";
+import { Ionicons } from '@expo/vector-icons';
 import WorksheetService from "@/services/SheetsIntegration";
 
 export default function ListSchedule() {
@@ -129,10 +129,15 @@ export default function ListSchedule() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            {/* BackButton positioned outside ScrollView with proper zIndex */}
-            <View style={styles.backButtonContainer}>
-                <BackButton />
-            </View>
+            {/* Botão de voltar personalizado */}
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => router.back()}
+                disabled={loading}
+            >
+                <Ionicons name="arrow-back" size={24} color="#059669" />
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </TouchableOpacity>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {/* Floating Orbs */}
@@ -320,12 +325,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f8f9fa',
     },
-    backButtonContainer: {
-        position: 'absolute',
-        top: 50,
-        left: 16,
-        zIndex: 999,
-        backgroundColor: 'transparent',
+    backButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        paddingTop: 8,
+        zIndex: 10,
+    },
+    backButtonText: {
+        marginLeft: 8,
+        color: '#059669',
+        fontSize: 16,
+        fontWeight: '500',
     },
     scrollContainer: {
         flexGrow: 1,
@@ -410,7 +421,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     header: {
-        marginTop: 100,
+        marginTop: 60,  // Ajustado para acomodar o botão de voltar
         paddingVertical: 16,
         alignItems: 'center',
         zIndex: 1,
