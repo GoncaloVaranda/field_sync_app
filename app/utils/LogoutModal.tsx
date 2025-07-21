@@ -34,6 +34,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ username, token, role }) => {
         }
     };
 
+
     return (
         <View style={styles.usernameButton}>
             <Pressable
